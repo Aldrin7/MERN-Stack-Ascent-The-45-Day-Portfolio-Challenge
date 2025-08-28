@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John Doe - Full Stack Developer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .business-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .business-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .bio {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-links {
+            list-style: none;
+            padding: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-links li {
+            margin: 10px 0;
+        }
+
+        .social-links a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-links a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-info p {
+            color: #777;
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+
+        @media (max-width: 480px) {
+            .business-card {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .name {
+                font-size: 1.6rem;
+            }
+
+            .title {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="business-card">
+        <!-- Profile Picture -->
+        <img src="https://via.placeholder.com/120x120/4ecdc4/ffffff?text=JD" alt="John Doe - Professional Headshot" class="profile-image">
+
+        <!-- Name -->
+        <h1 class="name">John Doe</h1>
+
+        <!-- Professional Title -->
+        <h2 class="title">Full Stack Developer</h2>
+
+        <!-- Short Bio -->
+        <p class="bio">
+            Passionate full-stack developer with 3+ years of experience building modern web applications.
+            Expert in MERN stack technologies, with a focus on creating user-friendly and scalable solutions.
+        </p>
+
+        <!-- Social Media Links -->
+        <ul class="social-links">
+            <li><a href="https://linkedin.com/in/johndoe" target="_blank">LinkedIn Profile</a></li>
+            <li><a href="https://github.com/johndoe" target="_blank">GitHub Portfolio</a></li>
+            <li><a href="https://twitter.com/johndoe" target="_blank">Twitter</a></li>
+            <li><a href="mailto:john.doe@email.com">Send Email</a></li>
+        </ul>
+
+        <!-- Contact Information -->
+        <div class="contact-info">
+            <p>📧 john.doe@email.com</p>
+            <p>📱 +1 (555) 123-4567</p>
+            <p>🌐 www.johndoe.dev</p>
+        </div>
+    </div>
+</body>
+</html>
