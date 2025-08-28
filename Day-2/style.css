@@ -1,0 +1,109 @@
+/* Reset & Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body - Center the card using Flexbox */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+}
+
+/* Business Card Container */
+.card {
+    width: 400px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Circular Profile Image */
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    margin: 0 auto 20px;
+    object-fit: cover;
+}
+
+/* Typography Styles */
+.name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.title {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+}
+
+.bio {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Contact Information */
+.contact-info {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    position: relative;
+    z-index: 1;
+}
+
+.contact-info p {
+    color: #777;
+    font-size: 0.9rem;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    .card {
+        padding: 30px 20px;
+        margin: 20px;
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .name {
+        font-size: 1.6rem;
+    }
+
+    .title {
+        font-size: 1rem;
+    }
+
+    .profile-image {
+        width: 100px;
+        height: 100px;
+    }
+}
