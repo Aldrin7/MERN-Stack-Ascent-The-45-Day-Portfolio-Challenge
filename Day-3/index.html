@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 3: JavaScript Grade Calculator Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #6f42c1;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .grade-display {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 3px solid #dee2e6;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.1rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #6f42c1;
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 20px 0;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(111, 66, 193, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .grading-scale {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .grading-scale h3 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .scale-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .scale-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+            font-weight: 600;
+        }
+
+        .scale-item.grade-A { border-color: #28a745; color: #28a745; }
+        .scale-item.grade-B { border-color: #17a2b8; color: #17a2b8; }
+        .scale-item.grade-C { border-color: #ffc107; color: #ffc107; }
+        .scale-item.grade-D { border-color: #fd7e14; color: #fd7e14; }
+        .scale-item.grade-F { border-color: #dc3545; color: #dc3545; }
+
+        .test-scores {
+            margin-top: 30px;
+        }
+
+        .test-scores h3 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .test-score {
+            background: #6f42c1;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 600;
+        }
+
+        .test-score:hover {
+            background: #5a32a3;
+        }
+
+        .console-output {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .console-output h4 {
+            color: #68d391;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .input-group input {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Grade Calculator</h1>
+        <p class="subtitle">Day 3: JavaScript Fundamentals Challenge</p>
+
+        <div class="grade-display">
+            <div class="input-group">
+                <label for="scoreInput">Enter your score (0-100):</label>
+                <input type="number" id="scoreInput" min="0" max="100" placeholder="Enter score..." />
+            </div>
+
+            <button class="calculate-btn" onclick="calculateGradeFromUI()">Calculate Grade</button>
+
+            <div id="result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="grading-scale">
+            <h3>📊 Grading Scale</h3>
+            <div class="scale-grid">
+                <div class="scale-item grade-A">90-100: A</div>
+                <div class="scale-item grade-B">80-89: B</div>
+                <div class="scale-item grade-C">70-79: C</div>
+                <div class="scale-item grade-D">60-69: D</div>
+                <div class="scale-item grade-F">0-59: F</div>
+            </div>
+        </div>
+
+        <div class="test-scores">
+            <h3>🧪 Quick Test Scores</h3>
+            <div class="test-grid">
+                <div class="test-score" onclick="testScore(95)">95</div>
+                <div class="test-score" onclick="testScore(87)">87</div>
+                <div class="test-score" onclick="testScore(73)">73</div>
+                <div class="test-score" onclick="testScore(68)">68</div>
+                <div class="test-score" onclick="testScore(55)">55</div>
+            </div>
+        </div>
+
+        <div class="console-output">
+            <h4>📝 Console Output:</h4>
+            <div id="consoleOutput">
+                Open Developer Tools (F12) to see console.log() output from script.js<br>
+                → Test scores will be logged here when you run the grade calculator!
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Day 3 Challenge:</strong> Write a JavaScript function that converts numeric scores to letter grades using if/else if statements.</p>
+            <p><strong>Tip:</strong> Open Developer Tools (F12) and check the Console tab to see the detailed test results!</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Enhanced UI functionality
+        function calculateGradeFromUI() {
+            const scoreInput = document.getElementById('scoreInput');
+            const resultDiv = document.getElementById('result');
+
+            const score = parseFloat(scoreInput.value);
+
+            if (isNaN(score)) {
+                showResult('Please enter a valid number!', 'error');
+                return;
+            }
+
+            const grade = window.calculateGrade ? window.calculateGrade(score) : 'Function not loaded';
+
+            if (grade === 'Invalid score. Please enter a number between 0 and 100.') {
+                showResult(grade, 'error');
+            } else {
+                showResult(`Score: ${score} → Grade: ${grade}`, 'success');
+            }
+        }
+
+        function testScore(score) {
+            document.getElementById('scoreInput').value = score;
+            calculateGradeFromUI();
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'flex';
+
+            // Auto-hide after 3 seconds for success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    resultDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Override console.log to display in our UI
+        const originalConsoleLog = console.log;
+        let consoleMessages = [];
+
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            consoleMessages.push(args.join(' '));
+
+            // Update our console output display
+            const consoleOutput = document.getElementById('consoleOutput');
+            consoleOutput.innerHTML = consoleMessages.slice(-10).join('<br>');
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('scoreInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calculateGradeFromUI();
+                }
+            });
+
+            console.log('🎓 JavaScript Grade Calculator initialized!');
+            console.log('📝 Enter a score and click "Calculate Grade" to test.');
+        });
+    </script>
+</body>
+</html>
