@@ -1,0 +1,261 @@
+/* Reset & Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Light Mode Styles (Default) */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.card {
+    width: 400px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.card-header {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.theme-toggle {
+    background: linear-gradient(135deg, #6f42c1, #5a32a3);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.theme-toggle:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #5a32a3, #4a2c8a);
+}
+
+.theme-toggle:active {
+    transform: translateY(0);
+}
+
+.profile-section {
+    margin-bottom: 20px;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    margin: 0 auto 20px;
+    object-fit: cover;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+}
+
+.title {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.bio {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    transition: color 0.3s;
+}
+
+.contact-info {
+    margin-bottom: 25px;
+}
+
+.contact-info p {
+    color: #777;
+    font-size: 0.9rem;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: color 0.3s;
+}
+
+.skills-section {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.skills-section h3 {
+    color: #6f42c1;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.skill-tag {
+    background: #f0f0f0;
+    color: #666;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dark Mode Styles */
+.dark-mode {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.dark-mode .card {
+    background-color: #2d2d2d;
+    border-color: #555555;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .profile-image {
+    border-color: #2d2d2d;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .name {
+    color: #ffffff;
+}
+
+.dark-mode .title {
+    color: #cccccc;
+}
+
+.dark-mode .bio {
+    color: #cccccc;
+}
+
+.dark-mode .contact-info p {
+    color: #aaaaaa;
+}
+
+.dark-mode .skill-tag {
+    background: #404040;
+    color: #cccccc;
+}
+
+.dark-mode .theme-toggle {
+    background: linear-gradient(135deg, #4a2c8a, #3a1f6e);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    .card {
+        padding: 25px;
+        margin: 10px;
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .card-header {
+        top: 15px;
+        right: 15px;
+    }
+
+    .theme-toggle {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .name {
+        font-size: 1.6rem;
+    }
+
+    .title {
+        font-size: 1rem;
+    }
+
+    .profile-image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .skills-list {
+        gap: 6px;
+    }
+
+    .skill-tag {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+}
+
+/* Animation for theme transitions */
+.theme-toggle {
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.theme-toggle:active::before {
+    width: 100px;
+    height: 100px;
+}
+
+/* Hover effects for skill tags */
+.skill-tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .skill-tag:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Smooth transitions for all elements */
+* {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
