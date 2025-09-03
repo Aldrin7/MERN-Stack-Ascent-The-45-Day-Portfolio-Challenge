@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote Generator - Day 6 Challenge</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>💬 Random Quote Generator</h1>
+            <p class="subtitle">Day 6: JavaScript Deep Dive & API Calls</p>
+        </header>
+
+        <div class="quote-section">
+            <div class="quote-container">
+                <div class="quote-display">
+                    <div class="quote-marks">"</div>
+                    <blockquote class="quote-text" id="quote-text">
+                        Click "Get New Quote" to fetch an inspirational quote from the API!
+                    </blockquote>
+                    <cite class="quote-author" id="quote-author"></cite>
+                </div>
+
+                <div class="quote-actions">
+                    <button class="quote-btn" id="new-quote-btn">
+                        <span class="btn-icon">🎲</span>
+                        Get New Quote
+                    </button>
+
+                    <button class="quote-btn secondary" id="share-btn">
+                        <span class="btn-icon">📤</span>
+                        Share Quote
+                    </button>
+                </div>
+            </div>
+
+            <div class="loading-indicator" id="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading quote...</p>
+            </div>
+        </div>
+
+        <div class="api-info">
+            <h3>🌐 API Information</h3>
+            <div class="api-details">
+                <p><strong>API Endpoint:</strong> <code>https://api.quotable.io/random</code></p>
+                <p><strong>Response Format:</strong> JSON with quote content and author</p>
+                <p><strong>Method:</strong> GET request using fetch()</p>
+            </div>
+        </div>
+
+        <div class="console-output">
+            <h3>📝 Console Output</h3>
+            <div id="consoleOutput">
+                Open Developer Tools (F12) to see detailed fetch() operations and API responses!
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
