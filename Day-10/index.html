@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 10: CRUD Operations - Create & Read with MongoDB</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🗄️ CRUD Operations</h1>
+            <p class="subtitle">Create & Read with MongoDB and Express.js</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Create Project Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>➕ Create New Project</h2>
+                    <p>Test the POST /api/projects endpoint</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="createProjectForm" class="project-form">
+                        <div class="form-group">
+                            <label for="title">Project Title *</label>
+                            <input type="text" id="title" name="title" required
+                                   placeholder="Enter project title">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Project Description *</label>
+                            <textarea id="description" name="description" required
+                                      placeholder="Enter project description" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="technologies">Technologies (comma-separated)</label>
+                            <input type="text" id="technologies" name="technologies"
+                                   placeholder="e.g., Node.js, Express, MongoDB">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="category" name="category">
+                                    <option value="">Select category</option>
+                                    <option value="frontend">Frontend</option>
+                                    <option value="backend">Backend</option>
+                                    <option value="fullstack">Full Stack</option>
+                                    <option value="mobile">Mobile</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="featured">Featured Project</label>
+                                <select id="featured" name="featured">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="githubUrl">GitHub URL</label>
+                            <input type="url" id="githubUrl" name="githubUrl"
+                                   placeholder="https://github.com/username/project">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="liveUrl">Live Demo URL</label>
+                            <input type="url" id="liveUrl" name="liveUrl"
+                                   placeholder="https://project-demo.com">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="btn-icon">➕</span>
+                                Create Project
+                            </button>
+                            <button type="button" onclick="clearForm()" class="btn btn-secondary">
+                                <span class="btn-icon">🗑️</span>
+                                Clear Form
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Read Projects Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>📖 View All Projects</h2>
+                    <p>Test the GET /api/projects endpoint</p>
+                </div>
+
+                <div class="projects-controls">
+                    <div class="control-group">
+                        <button onclick="loadProjects()" class="btn btn-primary">
+                            <span class="btn-icon">🔄</span>
+                            Load Projects
+                        </button>
+                        <button onclick="clearProjects()" class="btn btn-secondary">
+                            <span class="btn-icon">🗑️</span>
+                            Clear Display
+                        </button>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="filterCategory">Filter by Category:</label>
+                        <select id="filterCategory" onchange="filterProjects()">
+                            <option value="">All Categories</option>
+                            <option value="frontend">Frontend</option>
+                            <option value="backend">Backend</option>
+                            <option value="fullstack">Full Stack</option>
+                            <option value="mobile">Mobile</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="projectsContainer" class="projects-container">
+                    <div class="loading-message">
+                        <p>Click "Load Projects" to fetch data from the API</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Testing Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>🧪 API Testing</h2>
+                    <p>Test your CRUD endpoints directly</p>
+                </div>
+
+                <div class="api-testing">
+                    <div class="api-test-group">
+                        <h3>GET /api/projects</h3>
+                        <button onclick="testGetProjects()" class="btn btn-outline">
+                            <span class="btn-icon">📖</span>
+                            Test Read Operation
+                        </button>
+                    </div>
+
+                    <div class="api-test-group">
+                        <h3>POST /api/projects</h3>
+                        <button onclick="testPostProject()" class="btn btn-outline">
+                            <span class="btn-icon">➕</span>
+                            Test Create Operation
+                        </button>
+                    </div>
+                </div>
+
+                <div id="apiResults" class="api-results">
+                    <h4>API Response:</h4>
+                    <pre id="apiResponse">Click a test button to see the API response</pre>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Full Stack Development Journey - Day 10: CRUD Operations</p>
+            <div class="footer-links">
+                <a href="#" onclick="showInstructions()">📋 Instructions</a>
+                <a href="#" onclick="showAPIDocs()">📚 API Docs</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for Instructions -->
+    <div id="instructionsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Instructions</h3>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h4>How to Test CRUD Operations:</h4>
+                <ol>
+                    <li>Make sure your backend server is running (server.js)</li>
+                    <li>Fill out the "Create Project" form above</li>
+                    <li>Click "Create Project" to test POST operation</li>
+                    <li>Click "Load Projects" to test GET operation</li>
+                    <li>Use the API Testing section for direct endpoint testing</li>
+                    <li>Check the browser console for detailed logs</li>
+                </ol>
+
+                <h4>Expected API Responses:</h4>
+                <ul>
+                    <li><strong>POST Success:</strong> Returns created project with ID</li>
+                    <li><strong>GET Success:</strong> Returns array of projects</li>
+                    <li><strong>Error:</strong> Returns error message with status code</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for API Docs -->
+    <div id="apiDocsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📚 API Documentation</h3>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h4>Available Endpoints:</h4>
+
+                <div class="api-endpoint">
+                    <h5>POST /api/projects</h5>
+                    <p>Create a new project</p>
+                    <strong>Request Body:</strong>
+                    <pre>{
+  "title": "Project Title",
+  "description": "Project Description",
+  "technologies": ["Tech1", "Tech2"],
+  "category": "frontend",
+  "featured": false,
+  "githubUrl": "https://github.com/...",
+  "liveUrl": "https://demo.com"
+}</pre>
+                </div>
+
+                <div class="api-endpoint">
+                    <h5>GET /api/projects</h5>
+                    <p>Retrieve all projects</p>
+                    <strong>Response:</strong>
+                    <pre>{
+  "success": true,
+  "count": 5,
+  "data": [...]
+}</pre>
+                </div>
+
+                <h4>Status Codes:</h4>
+                <ul>
+                    <li><strong>200:</strong> Successful GET request</li>
+                    <li><strong>201:</strong> Successful POST request</li>
+                    <li><strong>400:</strong> Bad request (validation error)</li>
+                    <li><strong>500:</strong> Server error</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

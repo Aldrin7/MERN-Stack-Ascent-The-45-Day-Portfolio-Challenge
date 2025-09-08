@@ -1,0 +1,33 @@
+{
+  "name": "day-8-restful-routing",
+  "version": "1.0.0",
+  "description": "Day 8: RESTful Routing - Building Professional APIs with Express.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "express",
+    "nodejs",
+    "rest",
+    "api",
+    "routing",
+    "fullstack"
+  ],
+  "author": "Aldrin Manon",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aldrinmanon/fullstack-web-development"
+  }
+}
