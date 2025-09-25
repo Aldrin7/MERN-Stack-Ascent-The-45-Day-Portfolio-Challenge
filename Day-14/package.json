@@ -1,0 +1,79 @@
+{
+  "name": "blog-platform",
+  "version": "1.0.0",
+  "description": "Day 14: Blog Platform with User Authentication - Complete Content Management System with Secure User Authentication",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "build": "echo 'Building blog platform...'",
+    "serve": "npx serve public -l 3001",
+    "test": "jest",
+    "seed": "node scripts/seed.js"
+  },
+  "keywords": [
+    "blog",
+    "authentication",
+    "jwt",
+    "mongodb",
+    "express",
+    "cms",
+    "user-management",
+    "content-management"
+  ],
+  "author": "Aldrin Manon",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^6.0.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "express-session": "^1.17.3",
+    "express-validator": "^7.0.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0",
+    "express-rate-limit": "^7.1.5",
+    "dotenv": "^16.3.1",
+    "connect-mongo": "^5.1.0",
+    "nodemailer": "^6.9.7",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aldrinmanon/fullstack-web-development"
+  },
+  "homepage": "https://aldrin.netlify.app"
+}
+<environment_details>
+# VSCode Visible Files
+Day-13/package.json
+
+# VSCode Open Tabs
+Day-11/script.js
+Day-12/package.json
+Day-12/index.html
+Day-12/styles.css
+Day-13/package.json
+Day-13/public/index.html
+Day-13/public/styles.css
+Day-13/public/script.js
+Day-13/README.md
+
+# Current Time
+8/28/2025, 10:20:20 PM (Asia/Calcutta, UTC+5.5:00)
+
+# Context Window Usage
+117,186 / 262.144K tokens used (45%)
+
+# Current Mode
+ACT MODE

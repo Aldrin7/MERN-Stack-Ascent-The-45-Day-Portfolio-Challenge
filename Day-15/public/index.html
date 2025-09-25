@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 TaskFlow - Complete Task Management System</title>
+    <link rel="stylesheet" href="styles-final.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="brand-icon">📋</span>
+                <span class="brand-text">TaskFlow</span>
+            </div>
+
+            <div class="nav-links" id="navLinks">
+                <a href="#" onclick="showView('dashboard')" class="nav-link active">Dashboard</a>
+                <a href="#" onclick="showView('board')" class="nav-link">Board</a>
+                <a href="#" onclick="showView('teams')" class="nav-link">Teams</a>
+                <a href="#" onclick="showView('analytics')" class="nav-link">Analytics</a>
+            </div>
+
+            <div class="nav-actions">
+                <button onclick="showCreateTask()" class="btn-primary">
+                    <span class="btn-icon">+</span>
+                    New Task
+                </button>
+                <div class="user-menu">
+                    <button onclick="toggleUserMenu()" class="user-menu-btn">
+                        <div class="user-avatar" id="userAvatar">👤</div>
+                        <span class="user-name" id="userName">User</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" onclick="showProfile()">Profile</a>
+                        <a href="#" onclick="showSettings()">Settings</a>
+                        <a href="#" onclick="showNotifications()">Notifications</a>
+                        <div class="divider"></div>
+                        <a href="#" onclick="logout()">Logout</a>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="toggleMobileMenu()" class="mobile-menu-btn">
+                <span class="hamburger">☰</span>
+            </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="nav-search">
+            <div class="search-container">
+                <input
+                    type="text"
+                    id="globalSearch"
+                    placeholder="Search tasks, projects, teams..."
+                    class="search-input"
+                    onkeyup="handleSearch(event)"
+                >
+                <button onclick="performSearch()" class="search-btn">
+                    <span class="search-icon">🔍</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard View -->
+        <section id="dashboardView" class="view active">
+            <div class="container">
+                <div class="dashboard-header">
+                    <h1>Dashboard</h1>
+                    <div class="dashboard-actions">
+                        <button onclick="refreshDashboard()" class="btn-secondary">
+                            <span class="btn-icon">🔄</span>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="totalTasks">24</div>
+                            <div class="stat-label">Total Tasks</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="completedTasks">16</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="activeTeams">3</div>
+                            <div class="stat-label">Active Teams</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="activeProjects">5</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Tasks -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>My Tasks</h2>
+                        <button onclick="showAllTasks()" class="btn-secondary">View All</button>
+                    </div>
+                    <div id="myTasks" class="task-list">
+                        <!-- Tasks will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Recent Activity</h2>
+                        <button onclick="showAllActivity()" class="btn-secondary">View All</button>
+                    </div>
+                    <div id="recentActivity" class="activity-feed">
+                        <!-- Activity will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Team Overview -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>My Teams</h2>
+                        <button onclick="showCreateTeam()" class="btn-primary">Create Team</button>
+                    </div>
+                    <div id="myTeams" class="teams-grid">
+                        <!-- Teams will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kanban Board View -->
+        <section id="boardView" class="view">
+            <div class="container">
+                <div class="board-header">
+                    <div class="board-info">
+                        <h1 id="boardTitle">TaskFlow Project</h1>
+                        <p id="boardDescription">Complete task management system</p>
+                    </div>
+                    <div class="board-actions">
+                        <button onclick="showProjectSettings()" class="btn-secondary">
+                            <span class="btn-icon">⚙️</span>
+                            Settings
+                        </button>
+                        <button onclick="showCreateTask()" class="btn-primary">
+                            <span class="btn-icon">+</span>
+                            Add Task
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Team Members -->
+                <div class="team-members">
+                    <h3>Team Members</h3>
+                    <div id="projectMembers" class="members-list">
+                        <!-- Team members will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Kanban Board -->
+                <div class="kanban-board" id="kanbanBoard">
+                    <div class="kanban-column" data-status="todo">
+                        <div class="column-header">
+                            <h3>To Do</h3>
+                            <span class="task-count" id="todoCount">0</span>
+                        </div>
+                        <div class="column-content" id="todoColumn">
+                            <!-- Tasks will be populated by JavaScript -->
+                        </div>
+                        <button onclick="showCreateTask('todo')" class="add-task-btn">
+                            <span class="btn-icon">+</span>
+                            Add Task
+                        </button>
+                    </div>
+
+                    <div class="kanban-column" data-status="in-progress">
+                        <div class="column-header">
+                            <h3>In Progress</h3>
+                            <span class="task-count" id="inProgressCount">0</span>
+                        </div>
+                        <div class="column-content" id="inProgressColumn">
+                            <!-- Tasks will be populated by JavaScript -->
+                        </div>
+                        <button onclick="showCreateTask('in-progress')" class="add-task-btn">
+                            <span class="btn-icon">+</span>
+                            Add Task
+                        </button>
+                    </div>
+
+                    <div class="kanban-column" data-status="review">
+                        <div class="column-header">
+                            <h3>Review</h3>
+                            <span class="task-count" id="reviewCount">0</span>
+                        </div>
+                        <div class="column-content" id="reviewColumn">
+                            <!-- Tasks will be populated by JavaScript -->
+                        </div>
+                        <button onclick="showCreateTask('review')" class="add-task-btn">
+                            <span class="btn-icon">+</span>
+                            Add Task
+                        </button>
+                    </div>
+
+                    <div class="kanban-column" data-status="done">
+                        <div class="column-header">
+                            <h3>Done</h3>
+                            <span class="task-count" id="doneCount">0</span>
+                        </div>
+                        <div class="column-content" id="doneColumn">
+                            <!-- Tasks will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teams View -->
+        <section id="teamsView" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Teams</h1>
+                    <button onclick="showCreateTeam()" class="btn-primary">
+                        <span class="btn-icon">+</span>
+                        Create Team
+                    </button>
+                </div>
+
+                <div id="teamsList" class="teams-grid">
+                    <!-- Teams will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics View -->
+        <section id="analyticsView" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Analytics</h1>
+                    <div class="analytics-filters">
+                        <select id="analyticsTimeframe" onchange="updateAnalytics()">
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="quarter">This Quarter</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Task Completion Rate</h3>
+                        <div class="chart-container">
+                            <div id="completionChart" class="chart-placeholder">
+                                <div class="chart-value">67%</div>
+                                <div class="chart-label">Completion Rate</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Team Productivity</h3>
+                        <div class="chart-container">
+                            <div id="productivityChart" class="chart-placeholder">
+                                <div class="chart-value">85%</div>
+                                <div class="chart-label">Productivity Score</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Project Progress</h3>
+                        <div class="chart-container">
+                            <div id="progressChart" class="chart-placeholder">
+                                <div class="chart-value">73%</div>
+                                <div class="chart-label">Overall Progress</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Time Tracking</h3>
+                        <div class="chart-container">
+                            <div id="timeChart" class="chart-placeholder">
+                                <div class="chart-value">42h</div>
+                                <div class="chart-label">This Week</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Create Task Modal -->
+    <div id="createTaskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Task</h3>
+                <button onclick="closeModal('createTaskModal')" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createTaskForm" class="form">
+                    <div class="form-group">
+                        <label for="taskTitle">Task Title *</label>
+                        <input
+                            type="text"
+                            id="taskTitle"
+                            name="title"
+                            required
+                            placeholder="Enter task title"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDescription">Description</label>
+                        <textarea
+                            id="taskDescription"
+                            name="description"
+                            placeholder="Describe the task"
+                            rows="3"
+                        ></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskAssignee">Assign To</label>
+                            <select id="taskAssignee" name="assignedTo">
+                                <option value="">Select Team Member</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskPriority">Priority</label>
+                            <select id="taskPriority" name="priority">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskStatus">Status</label>
+                            <select id="taskStatus" name="status">
+                                <option value="todo">To Do</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="review">Review</option>
+                                <option value="done">Done</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskDueDate">Due Date</label>
+                            <input
+                                type="date"
+                                id="taskDueDate"
+                                name="dueDate"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskLabels">Labels</label>
+                        <input
+                            type="text"
+                            id="taskLabels"
+                            name="labels"
+                            placeholder="bug, feature, enhancement"
+                        >
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" onclick="closeModal('createTaskModal')" class="btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <span class="btn-text">Create Task</span>
+                            <span class="btn-spinner" style="display: none;"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Team Modal -->
+    <div id="createTeamModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Team</h3>
+                <button onclick="closeModal('createTeamModal')" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createTeamForm" class="form">
+                    <div class="form-group">
+                        <label for="teamName">Team Name *</label>
+                        <input
+                            type="text"
+                            id="teamName"
+                            name="name"
+                            required
+                            placeholder="Enter team name"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teamDescription">Description</label>
+                        <textarea
+                            id="teamDescription"
+                            name="description"
+                            placeholder="Describe your team's purpose"
+                            rows="3"
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teamMembers">Add Members</label>
+                        <input
+                            type="text"
+                            id="teamMembers"
+                            name="members"
+                            placeholder="Enter email addresses (comma-separated)"
+                        >
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" onclick="closeModal('createTeamModal')" class="btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <span class="btn-text">Create Team</span>
+                            <span class="btn-spinner" style="display: none;"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Details Modal -->
+    <div id="taskDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="taskModalTitle">Task Details</h3>
+                <button onclick="closeModal('taskDetailsModal')" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="taskDetailsContent">
+                    <!-- Task details will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notifications" class="notifications-container">
+        <!-- Notifications will be populated by JavaScript -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>TaskFlow</h4>
+                <p>Streamline your workflow with our comprehensive task management platform. Built for teams who demand excellence.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Features</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Kanban Board</a></li>
+                    <li><a href="#">Team Management</a></li>
+                    <li><a href="#">Analytics</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">API Reference</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 TaskFlow. All rights reserved. Built with ❤️ for productivity.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

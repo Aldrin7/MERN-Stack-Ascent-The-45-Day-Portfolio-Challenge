@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 20: Props & Reusability - Interactive Slides</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kalam', cursive;
+            background-color: #f8f9fa;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            border: 15px solid #212529;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: opacity 0.5s ease-in-out;
+            padding: 30px 50px;
+            line-height: 1.6;
+            color: #343a40;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #6f42c1;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .slide-content {
+            font-size: 1.4rem;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .highlight {
+            color: #d63384;
+            font-weight: 700;
+        }
+
+        .code {
+            background-color: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            color: #000;
+            display: block;
+            white-space: pre-wrap;
+        }
+
+        ul {
+            list-style-type: '✏️ ';
+            padding-left: 40px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .slide-footer {
+            text-align: right;
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .marker-blue { color: #0d6efd; }
+        .marker-red { color: #dc3545; }
+        .marker-green { color: #198754; }
+
+        #navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        #navigation button {
+            font-family: 'Kalam', cursive;
+            font-size: 1.5rem;
+            padding: 10px 25px;
+            border: 3px solid #212529;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        #navigation button:hover:not(:disabled) {
+            background-color: #212529;
+            color: #fff;
+        }
+
+        #navigation button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #slide-counter {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        /* Custom styles for Day 20 content */
+        .slide-content h2 {
+            font-size: 2rem;
+            color: #6f42c1;
+            margin: 20px 0 15px 0;
+        }
+
+        .slide-content h3 {
+            font-size: 1.6rem;
+            color: #495057;
+            margin: 25px 0 15px 0;
+        }
+
+        .slide-content h4 {
+            font-size: 1.3rem;
+            color: #6c757d;
+            margin: 20px 0 10px 0;
+        }
+
+        .slide-content p {
+            margin-bottom: 15px;
+        }
+
+        .learning-objectives {
+            background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #6f42c1;
+        }
+
+        .learning-objectives h4 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .objective-item {
+            background: rgba(111, 66, 193, 0.1);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 3px solid #6f42c1;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            overflow-x: auto;
+        }
+
+        .code-example .code-line {
+            display: block;
+            margin: 2px 0;
+        }
+
+        .diagram {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .comparison-item {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comparison-item h4 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .tag-structure {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .tag-structure .angle {
+            color: #dc3545;
+        }
+
+        .tag-structure .tagname {
+            color: #0d6efd;
+        }
+
+        .tag-structure .attribute {
+            color: #d63384;
+        }
+
+        .tag-structure .content {
+            color: #000;
+        }
+
+        .key-points {
+            background: rgba(111, 66, 193, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .key-points h4 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .key-point {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 3px solid #6f42c1;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+            text-align: center;
+        }
+
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+        }
+
+        .feature-description {
+            font-size: 1em;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .workflow-diagram {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: scale(1.05);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .props-flow-diagram {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .flow-item {
+            display: inline-block;
+            margin: 10px 20px;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-width: 120px;
+        }
+
+        .flow-arrow {
+            display: inline-block;
+            margin: 0 10px;
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Profile Section -->
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.9); padding: 8px 12px; border-radius: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <img src="https://aldrin.netlify.app/IMG_20250305_175533101_PORTRAIT.jpg" alt="Aldrin Manon" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #667eea;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: #667eea; margin: 0;">Aldrin Manon</h3>
+    </div>
+
+    <div id="slideshow-container"></div>
+
+    <div id="navigation">
+        <button id="prevBtn">← Prev</button>
+        <div id="slide-counter">1 / 7</div>
+        <button id="nextBtn">Next →</button>
+    </div>
+
+    <script>
+        const slideContent = [
+            {
+                title: "Day 20: Props & Reusability",
+                content: `
+                    <h2>Master React Components with Props</h2>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <h3 style="font-size: 2.2rem; color: #6f42c1; margin-bottom: 20px;">Welcome to Props & Reusability</h3>
+                        <p style="font-size: 1.5rem; color: #495057; max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                            Today we explore <span class="highlight">React props</span> - the mechanism for passing data between components.
+                            Learn how to create truly reusable components that work with different data.
+                        </p>
+                    </div>
+
+                    <div class="learning-objectives">
+                        <h4>🎯 Learning Objectives</h4>
+                        <div class="objective-item">
+                            <strong>📦 Props Fundamentals:</strong> Understand what props are and how they work
+                        </div>
+                        <div class="objective-item">
+                            <strong>🔄 Component Reusability:</strong> Create components that work with different data
+                        </div>
+                        <div class="objective-item">
+                            <strong>🧹 Prop Destructuring:</strong> Clean, modern JavaScript syntax
+                        </div>
+                        <div class="objective-item">
+                            <strong>🎯 Props vs State:</strong> Know when to use each
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Props Basics",
+                content: `
+                    <h3>Understanding Props in React:</h3>
+                    <p>Props (Properties) are the mechanism by which data is passed from parent components to child components in React. They enable parent-child communication and component reusability.</p>
+
+                    <div class="props-flow-diagram">
+                        <h3 style="margin-bottom: 30px; color: #333;">React Data Flow: Parent → Child</h3>
+                        <div class="flow-item">
+                            <strong>Parent Component</strong><br>
+                            <em>Contains Data</em>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-item">
+                            <strong>Props</strong><br>
+                            <em>Data Transfer</em>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-item">
+                            <strong>Child Component</strong><br>
+                            <em>Uses Data</em>
+                        </div>
+                    </div>
+
+                    <div class="code-example">
+                        <div class="code-line"><span style="color: #dc3545;">// Parent component passing props</span></div>
+                        <div class="code-line"><span style="color: #dc3545;">function</span> <span style="color: #0d6efd;">App</span>() {</div>
+                        <div class="code-line">    <span style="color: #dc3545;">return</span> (</div>
+                        <div class="code-line">        <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">ProjectCard</span></div>
+                        <div class="code-line">            <span style="color: #d63384;">title</span>=<span style="color: #198754;">"My Project"</span></div>
+                        <div class="code-line">            <span style="color: #d63384;">description</span>=<span style="color: #198754;">"Project description"</span></div>
+                        <div class="code-line">        <span style="color: #dc3545;">/></span></div>
+                        <div class="code-line">    );</div>
+                        <div class="code-line">}</div>
+                        <div class="code-line"></div>
+                        <div class="code-line"><span style="color: #dc3545;">// Child component receiving props</span></div>
+                        <div class="code-line"><span style="color: #dc3545;">function</span> <span style="color: #0d6efd;">ProjectCard</span>(<span style="color: #0d6efd;">props</span>) {</div>
+                        <div class="code-line">    <span style="color: #dc3545;">return</span> (</div>
+                        <div class="code-line">        <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span>{props.title}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span>{props.description}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">        <span style="color: #dc3545;"></</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">    );</div>
+                        <div class="code-line">}</div>
+                    </div>
+                `
+            },
+            {
+                title: "Prop Destructuring",
+                content: `
+                    <h3>Cleaner Code with Modern JavaScript:</h3>
+                    <p>Prop destructuring allows you to extract specific values from the props object directly in the function parameter. This creates cleaner, more readable component code.</p>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h4>Without Destructuring</h4>
+                            <div class="code-example">
+                                <div class="code-line"><span style="color: #dc3545;">function</span> <span style="color: #0d6efd;">ProjectCard</span>(<span style="color: #0d6efd;">props</span>) {</div>
+                                <div class="code-line">    <span style="color: #dc3545;">return</span> (</div>
+                                <div class="code-line">        <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span>{props.title}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span>{props.description}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">        <span style="color: #dc3545;"></</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">    );</div>
+                                <div class="code-line">}</div>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>With Destructuring</h4>
+                            <div class="code-example">
+                                <div class="code-line"><span style="color: #dc3545;">function</span> <span style="color: #0d6efd;">ProjectCard</span>({ title, description }) {</div>
+                                <div class="code-line">    <span style="color: #dc3545;">return</span> (</div>
+                                <div class="code-line">        <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span>{title}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span>{description}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">        <span style="color: #dc3545;"></</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">    );</div>
+                                <div class="code-line">}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="key-points">
+                        <h4>✅ Benefits of Destructuring:</h4>
+                        <div class="key-point">
+                            <strong>Cleaner code:</strong> No more props.propName repetition
+                        </div>
+                        <div class="key-point">
+                            <strong>Better readability:</strong> Clear parameter names
+                        </div>
+                        <div class="key-point">
+                            <strong>Modern JavaScript:</strong> Uses ES6 destructuring syntax
+                        </div>
+                        <div class="key-point">
+                            <strong>Easier debugging:</strong> Clear variable names in scope
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "The Power of Reusability",
+                content: `
+                    <h3>One Component, Multiple Uses:</h3>
+                    <p>Reusable components reduce code duplication, improve maintainability, and create consistent user experiences. Write once, use everywhere with different data through props.</p>
+
+                    <div class="code-example">
+                        <div class="code-line"><span style="color: #dc3545;">// Same ProjectCard component used multiple times</span></div>
+                        <div class="code-line"><span style="color: #dc3545;">function</span> <span style="color: #0d6efd;">App</span>() {</div>
+                        <div class="code-line">    <span style="color: #dc3545;">return</span> (</div>
+                        <div class="code-line">        <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">div</span> <span style="color: #d63384;">className</span>=<span style="color: #198754;">"app"</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">ProjectCard</span></div>
+                        <div class="code-line">                <span style="color: #d63384;">title</span>=<span style="color: #198754;">"E-commerce Platform"</span></div>
+                        <div class="code-line">                <span style="color: #d63384;">description</span>=<span style="color: #198754;">"Full-stack e-commerce solution with React and Node.js"</span></div>
+                        <div class="code-line">            <span style="color: #dc3545;">/></span></div>
+                        <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">ProjectCard</span></div>
+                        <div class="code-line">                <span style="color: #d63384;">title</span>=<span style="color: #198754;">"Weather Dashboard"</span></div>
+                        <div class="code-line">                <span style="color: #d63384;">description</span>=<span style="color: #198754;">"Real-time weather app with location-based forecasts"</span></div>
+                        <div class="code-line">            <span style="color: #dc3545;">/></span></div>
+                        <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">ProjectCard</span></div>
+                        <div class="code-line">                <span style="color: #d63384;">title</span>=<span style="color: #198754;">"Task Manager"</span></div>
+                        <div class="code-line">                <span style="color: #d63384;">description</span>=<span style="color: #198754;">"Collaborative task management platform"</span></div>
+                        <div class="code-line">            <span style="color: #dc3545;">/></span></div>
+                        <div class="code-line">        <span style="color: #dc3545;"></</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">    );</div>
+                        <div class="code-line">}</div>
+                        <div class="code-line"></div>
+                        <div class="code-line"><span style="color: #dc3545;">// Same component, different results!</span></div>
+                        <div class="code-line"><span style="color: #dc3545;">function</span> <span style="color: #0d6efd;">ProjectCard</span>({ title, description }) {</div>
+                        <div class="code-line">    <span style="color: #dc3545;">return</span> (</div>
+                        <div class="code-line">        <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">div</span> <span style="color: #d63384;">className</span>=<span style="color: #198754;">"project-card"</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span>{title}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span>{description}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">        <span style="color: #dc3545;"></</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                        <div class="code-line">    );</div>
+                        <div class="code-line">}</div>
+                    </div>
+                `
+            },
+            {
+                title: "Props vs State",
+                content: `
+                    <h3>Understanding the Key Differences:</h3>
+                    <div class="comparison-table">
+                        <tr>
+                            <th>Feature</th>
+                            <th>Props</th>
+                            <th>State</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Data Flow</strong></td>
+                            <td>Parent → Child</td>
+                            <td>Internal to Component</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mutability</strong></td>
+                            <td>Read-only</td>
+                            <td>Can be modified</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Component Control</strong></td>
+                            <td>Controlled by parent</td>
+                            <td>Controlled by component</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Updates Triggered By</strong></td>
+                            <td>Parent re-rendering</td>
+                            <td>setState() or hooks</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Use Case</strong></td>
+                            <td>Configure component appearance/behavior</td>
+                            <td>Manage component internal state</td>
+                        </tr>
+                    </div>
+
+                    <div class="key-points">
+                        <h4>🎯 When to Use Props:</h4>
+                        <div class="key-point">
+                            <strong>Configuration:</strong> Component appearance and behavior
+                        </div>
+                        <div class="key-point">
+                            <strong>Data display:</strong> Content to show to the user
+                        </div>
+                        <div class="key-point">
+                            <strong>Callbacks:</strong> Functions to handle user interactions
+                        </div>
+                        <div class="key-point">
+                            <strong>Styling:</strong> CSS classes and inline styles
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Daily Challenge: ProjectCard Component",
+                content: `
+                    <div style="text-align: center; margin: 50px 0;">
+                        <div style="font-size: 4em; margin-bottom: 20px;">🎯</div>
+                        <h3 style="font-size: 2.2em; margin-bottom: 20px;">Build a Reusable ProjectCard Component</h3>
+                        <p style="font-size: 1.3rem; max-width: 600px; margin: 0 auto; margin-bottom: 40px;">
+                            Create a <span class="highlight">ProjectCard</span> component that accepts <span class="highlight">title</span> and <span class="highlight">description</span> props,
+                            then use it multiple times in an App component with different project data.
+                        </p>
+                    </div>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h4>📋 Requirements</h4>
+                            <ul>
+                                <li>Create ProjectCard component</li>
+                                <li>Accept title and description props</li>
+                                <li>Use prop destructuring</li>
+                                <li>Render multiple instances</li>
+                                <li>Add proper styling</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>🚀 Implementation</h4>
+                            <div class="code-example">
+                                <div class="code-line"><span style="color: #dc3545;">function</span> <span style="color: #0d6efd;">ProjectCard</span>({ title, description }) {</div>
+                                <div class="code-line">    <span style="color: #dc3545;">return</span> (</div>
+                                <div class="code-line">        <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">div</span> <span style="color: #d63384;">className</span>=<span style="color: #198754;">"project-card"</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span>{title}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">h3</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span>{description}<span style="color: #dc3545;"></</span><span style="color: #0d6efd;">p</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">        <span style="color: #dc3545;"></</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">    );</div>
+                                <div class="code-line">}</div>
+                                <div class="code-line"></div>
+                                <div class="code-line"><span style="color: #dc3545;">function</span> <span style="color: #0d6efd;">App</span>() {</div>
+                                <div class="code-line">    <span style="color: #dc3545;">return</span> (</div>
+                                <div class="code-line">        <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">            <span style="color: #dc3545;"><</span><span style="color: #0d6efd;">ProjectCard</span></div>
+                                <div class="code-line">                <span style="color: #d63384;">title</span>=<span style="color: #198754;">"Project One"</span></div>
+                                <div class="code-line">                <span style="color: #d63384;">description</span>=<span style="color: #198754;">"This is my first project"</span></div>
+                                <div class="code-line">            <span style="color: #dc3545;">/></span></div>
+                                <div class="code-line">        <span style="color: #dc3545;"></</span><span style="color: #0d6efd;">div</span><span style="color: #dc3545;">></span></div>
+                                <div class="code-line">    );</div>
+                                <div class="code-line">}</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Best Practices",
+                content: `
+                    <h3>Writing Maintainable, Reusable Components:</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <span class="feature-icon">📝</span>
+                            <div class="feature-title">Prop Naming</div>
+                            <div class="feature-description">Use descriptive, camelCase names. Prefer <code>firstName</code> over <code>fn</code>, <code>onClick</code> over <code>handler</code>.</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🛡️</span>
+                            <div class="feature-title">Default Props</div>
+                            <div class="feature-description">Always provide default values for optional props to prevent runtime errors and improve component reliability.</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">✅</span>
+                            <div class="feature-title">Prop Validation</div>
+                            <div class="feature-description">Use PropTypes or TypeScript to validate prop types and catch errors early in development.</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🔧</span>
+                            <div class="feature-title">DRY Principle</div>
+                            <div class="feature-description">Don't Repeat Yourself. If you see duplicated code, extract it into a reusable component with props.</div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; color: white;">
+                        <h3 style="font-size: 1.8em; margin-bottom: 20px;">🎉 Congratulations! You've mastered React Props & Reusability! 🎉</h3>
+                        <p style="font-size: 1.2rem; opacity: 0.9;">
+                            Your components are now truly reusable. Ready for Day 21: Event Handling and User Interactions?
+                        </p>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlide = 0;
+
+        function renderSlides() {
+            const container = document.getElementById('slideshow-container');
+            container.innerHTML = '';
+
+            slideContent.forEach((slide, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide ' + (index === 0 ? 'active' : '');
+
+                slideDiv.innerHTML = `
+                    <div class="slide-content">
+                        <h1 class="slide-title">` + slide.title + `</h1>
+                        <div>` + slide.content + `</div>
+                    </div>
+                    <div class="slide-footer">Day 20 | Props & Reusability | MERN Stack Ascent</div>
+                `;
+
+                container.appendChild(slideDiv);
+            });
+
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slide-counter');
+
+            slideCounter.textContent = (currentSlide + 1) + ' / ' + slideContent.length;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slideContent.length - 1;
+        }
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            currentSlide = n;
+            updateNavigation();
+        }
+
+        function nextSlide() {
+            if (currentSlide < slideContent.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        renderSlides();
+    </script>
+</body>
+</html>

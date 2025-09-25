@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 11: CRUD Operations - Update & Delete with MongoDB</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🗄️ Complete CRUD Operations</h1>
+            <p class="subtitle">Update & Delete with MongoDB ObjectId and HTTP Status Codes</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Update Project Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>📝 Update Project</h2>
+                    <p>Test the PUT /api/projects/:id endpoint</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="updateProjectForm" class="project-form">
+                        <div class="form-group">
+                            <label for="updateProjectId">Project ID *</label>
+                            <input type="text" id="updateProjectId" name="projectId" required
+                                   placeholder="Enter MongoDB ObjectId">
+                            <small class="help-text">Get this from the project list below or from a previous creation</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="updateTitle">New Title *</label>
+                            <input type="text" id="updateTitle" name="title" required
+                                   placeholder="Enter updated project title">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="updateDescription">New Description *</label>
+                            <textarea id="updateDescription" name="description" required
+                                      placeholder="Enter updated project description" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="updateCategory">New Category</label>
+                                <select id="updateCategory" name="category">
+                                    <option value="">Select category</option>
+                                    <option value="frontend">Frontend</option>
+                                    <option value="backend">Backend</option>
+                                    <option value="fullstack">Full Stack</option>
+                                    <option value="mobile">Mobile</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="updateFeatured">Featured</label>
+                                <select id="updateFeatured" name="featured">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="updateTechnologies">Update Technologies</label>
+                                <input type="text" id="updateTechnologies" name="technologies"
+                                       placeholder="e.g., React, Node.js (comma-separated)">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="btn-icon">📝</span>
+                                Update Project
+                            </button>
+                            <button type="button" onclick="clearUpdateForm()" class="btn btn-secondary">
+                                <span class="btn-icon">🗑️</span>
+                                Clear Form
+                            </button>
+                            <button type="button" onclick="loadProjectsForUpdate()" class="btn btn-outline">
+                                <span class="btn-icon">📋</span>
+                                Load Projects
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Projects List for Update -->
+                <div id="updateProjectsList" class="projects-list" style="display: none;">
+                    <h4>Available Projects for Update:</h4>
+                    <div id="updateProjectsContainer" class="projects-container">
+                        <!-- Projects will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Delete Project Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>🗑️ Delete Project</h2>
+                    <p>Test the DELETE /api/projects/:id endpoint</p>
+                </div>
+
+                <div class="delete-container">
+                    <div class="delete-form">
+                        <div class="form-group">
+                            <label for="deleteProjectId">Project ID to Delete *</label>
+                            <input type="text" id="deleteProjectId" name="projectId"
+                                   placeholder="Enter MongoDB ObjectId to delete">
+                            <small class="help-text">⚠️ This action cannot be undone</small>
+                        </div>
+
+                        <div class="delete-actions">
+                            <button onclick="deleteProject()" class="btn btn-danger">
+                                <span class="btn-icon">🗑️</span>
+                                Delete Project
+                            </button>
+                            <button type="button" onclick="clearDeleteForm()" class="btn btn-secondary">
+                                <span class="btn-icon">❌</span>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Delete Confirmation Modal -->
+                    <div id="deleteModal" class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>⚠️ Confirm Deletion</h3>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this project? This action cannot be undone.</p>
+                                <div id="deleteProjectInfo" class="project-info">
+                                    <!-- Project details will be shown here -->
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button onclick="confirmDelete()" class="btn btn-danger">
+                                    <span class="btn-icon">🗑️</span>
+                                    Yes, Delete
+                                </button>
+                                <button onclick="cancelDelete()" class="btn btn-secondary">
+                                    <span class="btn-icon">❌</span>
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects List for Delete -->
+                <div id="deleteProjectsList" class="projects-list" style="display: none;">
+                    <h4>Available Projects for Deletion:</h4>
+                    <div id="deleteProjectsContainer" class="projects-container">
+                        <!-- Projects will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- HTTP Status Codes Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>📊 HTTP Status Codes</h2>
+                    <p>Understanding API response codes</p>
+                </div>
+
+                <div class="status-codes">
+                    <div class="status-group">
+                        <h4>✅ Success Codes</h4>
+                        <div class="status-items">
+                            <div class="status-item success">
+                                <strong>200 OK</strong>
+                                <p>Request successful (GET, PUT)</p>
+                            </div>
+                            <div class="status-item success">
+                                <strong>201 Created</strong>
+                                <p>Resource created successfully (POST)</p>
+                            </div>
+                            <div class="status-item success">
+                                <strong>204 No Content</strong>
+                                <p>Request successful, no content (DELETE)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-group">
+                        <h4>❌ Error Codes</h4>
+                        <div class="status-items">
+                            <div class="status-item error">
+                                <strong>400 Bad Request</strong>
+                                <p>Invalid request data or ID format</p>
+                            </div>
+                            <div class="status-item error">
+                                <strong>404 Not Found</strong>
+                                <p>Resource not found</p>
+                            </div>
+                            <div class="status-item error">
+                                <strong>500 Server Error</strong>
+                                <p>Internal server error</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Testing Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>🧪 API Testing</h2>
+                    <p>Test your complete CRUD endpoints</p>
+                </div>
+
+                <div class="api-testing">
+                    <div class="api-test-row">
+                        <div class="api-test-group">
+                            <h3>GET /api/projects</h3>
+                            <button onclick="testGetProjects()" class="btn btn-outline">
+                                <span class="btn-icon">📖</span>
+                                Test Read
+                            </button>
+                        </div>
+
+                        <div class="api-test-group">
+                            <h3>PUT /api/projects/:id</h3>
+                            <button onclick="testPutProject()" class="btn btn-outline">
+                                <span class="btn-icon">📝</span>
+                                Test Update
+                            </button>
+                        </div>
+
+                        <div class="api-test-group">
+                            <h3>DELETE /api/projects/:id</h3>
+                            <button onclick="testDeleteProject()" class="btn btn-outline">
+                                <span class="btn-icon">🗑️</span>
+                                Test Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="apiResults" class="api-results">
+                    <h4>API Response:</h4>
+                    <pre id="apiResponse">Click a test button to see the API response</pre>
+                </div>
+
+                <div class="test-examples">
+                    <h4>Example Test Cases:</h4>
+                    <div class="test-cases">
+                        <div class="test-case">
+                            <h5>✅ Valid Update (PUT)</h5>
+                            <p>Status: 200, Success: true, modifiedCount: 1</p>
+                        </div>
+                        <div class="test-case">
+                            <h5>❌ Invalid ID (PUT)</h5>
+                            <p>Status: 400, Error: "Invalid project ID format"</p>
+                        </div>
+                        <div class="test-case">
+                            <h5>❌ Not Found (PUT)</h5>
+                            <p>Status: 404, Error: "Project not found"</p>
+                        </div>
+                        <div class="test-case">
+                            <h5>✅ Valid Delete (DELETE)</h5>
+                            <p>Status: 204, Empty response body</p>
+                        </div>
+                        <div class="test-case">
+                            <h5>❌ Not Found (DELETE)</h5>
+                            <p>Status: 404, Error: "Project not found"</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Full Stack Development Journey - Day 11: Complete CRUD Operations</p>
+            <div class="footer-links">
+                <a href="#" onclick="showInstructions()">📋 Instructions</a>
+                <a href="#" onclick="showStatusCodes()">📊 Status Codes</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for Instructions -->
+    <div id="instructionsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Instructions</h3>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h4>How to Test Update & Delete Operations:</h4>
+                <ol>
+                    <li>Make sure your backend server is running (server.js)</li>
+                    <li>Use "Load Projects" to get available project IDs</li>
+                    <li>For updates: Fill the update form with valid project ID and new data</li>
+                    <li>For deletions: Enter project ID and confirm deletion</li>
+                    <li>Check HTTP status codes in browser network tab</li>
+                    <li>Test error cases with invalid or non-existent IDs</li>
+                </ol>
+
+                <h4>MongoDB ObjectId Format:</h4>
+                <ul>
+                    <li>Valid: <code>507f1f77bcf86cd799439011</code></li>
+                    <li>Invalid: <code>123</code> (too short)</li>
+                    <li>Invalid: <code>hello-world</code> (not hexadecimal)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Status Codes -->
+    <div id="statusCodesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📊 HTTP Status Codes Reference</h3>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h4>Complete CRUD Status Codes:</h4>
+
+                <div class="status-reference">
+                    <div class="status-ref-item">
+                        <h5>POST /api/projects (Create)</h5>
+                        <ul>
+                            <li><strong>201 Created:</strong> Project successfully created</li>
+                            <li><strong>400 Bad Request:</strong> Invalid data or missing fields</li>
+                            <li><strong>500 Server Error:</strong> Database or server error</li>
+                        </ul>
+                    </div>
+
+                    <div class="status-ref-item">
+                        <h5>GET /api/projects (Read)</h5>
+                        <ul>
+                            <li><strong>200 OK:</strong> Projects retrieved successfully</li>
+                            <li><strong>500 Server Error:</strong> Database error</li>
+                        </ul>
+                    </div>
+
+                    <div class="status-ref-item">
+                        <h5>PUT /api/projects/:id (Update)</h5>
+                        <ul>
+                            <li><strong>200 OK:</strong> Project successfully updated</li>
+                            <li><strong>400 Bad Request:</strong> Invalid ObjectId format</li>
+                            <li><strong>404 Not Found:</strong> Project doesn't exist</li>
+                            <li><strong>500 Server Error:</strong> Database error</li>
+                        </ul>
+                    </div>
+
+                    <div class="status-ref-item">
+                        <h5>DELETE /api/projects/:id (Delete)</h5>
+                        <ul>
+                            <li><strong>204 No Content:</strong> Project successfully deleted</li>
+                            <li><strong>400 Bad Request:</strong> Invalid ObjectId format</li>
+                            <li><strong>404 Not Found:</strong> Project doesn't exist</li>
+                            <li><strong>500 Server Error:</strong> Database error</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

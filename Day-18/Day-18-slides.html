@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 18: API Deployment & Production - Interactive Slides</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kalam', cursive;
+            background-color: #f8f9fa;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            border: 15px solid #212529;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: opacity 0.5s ease-in-out;
+            padding: 30px 50px;
+            line-height: 1.6;
+            color: #343a40;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #6f42c1;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .slide-content {
+            font-size: 1.4rem;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .highlight {
+            color: #d63384;
+            font-weight: 700;
+        }
+
+        .code {
+            background-color: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            color: #000;
+            display: block;
+            white-space: pre-wrap;
+        }
+
+        ul {
+            list-style-type: '✏️ ';
+            padding-left: 40px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .slide-footer {
+            text-align: right;
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .marker-blue { color: #0d6efd; }
+        .marker-red { color: #dc3545; }
+        .marker-green { color: #198754; }
+
+        #navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        #navigation button {
+            font-family: 'Kalam', cursive;
+            font-size: 1.5rem;
+            padding: 10px 25px;
+            border: 3px solid #212529;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        #navigation button:hover:not(:disabled) {
+            background-color: #212529;
+            color: #fff;
+        }
+
+        #navigation button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #slide-counter {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        /* Custom styles for Day 18 content */
+        .slide-content h2 {
+            font-size: 2rem;
+            color: #6f42c1;
+            margin: 20px 0 15px 0;
+        }
+
+        .slide-content h3 {
+            font-size: 1.6rem;
+            color: #495057;
+            margin: 25px 0 15px 0;
+        }
+
+        .slide-content h4 {
+            font-size: 1.3rem;
+            color: #6c757d;
+            margin: 20px 0 10px 0;
+        }
+
+        .slide-content p {
+            margin-bottom: 15px;
+        }
+
+        .learning-objectives {
+            background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #6f42c1;
+        }
+
+        .learning-objectives h4 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .objective-item {
+            background: rgba(111, 66, 193, 0.1);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 3px solid #6f42c1;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            overflow-x: auto;
+        }
+
+        .code-example .code-line {
+            display: block;
+            margin: 2px 0;
+        }
+
+        .diagram {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .comparison-item {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comparison-item h4 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .tag-structure {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .tag-structure .angle {
+            color: #dc3545;
+        }
+
+        .tag-structure .tagname {
+            color: #0d6efd;
+        }
+
+        .tag-structure .attribute {
+            color: #d63384;
+        }
+
+        .tag-structure .content {
+            color: #000;
+        }
+
+        .key-points {
+            background: rgba(111, 66, 193, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .key-points h4 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .key-point {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 3px solid #6f42c1;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+            text-align: center;
+        }
+
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+        }
+
+        .feature-description {
+            font-size: 1em;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .workflow-diagram {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: scale(1.05);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Profile Section -->
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.9); padding: 8px 12px; border-radius: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <img src="https://aldrin.netlify.app/IMG_20250305_175533101_PORTRAIT.jpg" alt="Aldrin Manon" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #667eea;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: #667eea; margin: 0;">Aldrin Manon</h3>
+    </div>
+
+    <div id="slideshow-container"></div>
+
+    <div id="navigation">
+        <button id="prevBtn">← Prev</button>
+        <div id="slide-counter">1 / 12</div>
+        <button id="nextBtn">Next →</button>
+    </div>
+
+    <script>
+        const slideContent = [
+            {
+                title: "Day 18: API Deployment & Production",
+                content: `
+                    <h2>Mastering Production Deployment</h2>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <h3 style="font-size: 2.2rem; color: #6f42c1; margin-bottom: 20px;">🚀 Welcome to Production Deployment</h3>
+                        <p style="font-size: 1.5rem; color: #495057; max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                            Today we'll transform your API from development to <span class="highlight">enterprise-grade production</span>.
+                            Master Docker, CI/CD, monitoring, and scaling strategies.
+                        </p>
+                    </div>
+
+                    <div class="learning-objectives">
+                        <h4>🎯 Learning Objectives</h4>
+                        <div class="objective-item">
+                            <strong>🐳 Docker Mastery:</strong> Containerization and orchestration
+                        </div>
+                        <div class="objective-item">
+                            <strong>🚀 CI/CD Pipeline:</strong> Automated testing and deployment
+                        </div>
+                        <div class="objective-item">
+                            <strong>📊 Monitoring:</strong> Real-time performance tracking
+                        </div>
+                        <div class="objective-item">
+                            <strong>🔒 Security:</strong> Enterprise-grade security features
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "What Makes an API Production Ready?",
+                content: `
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <div class="step-title">🔒 Security & Authentication</div>
+                                <div class="step-description">JWT tokens, rate limiting, input validation, security headers</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <div class="step-title">⚡ Performance & Scalability</div>
+                                <div class="step-description">Caching, compression, database optimization, load balancing</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <div class="step-title">📊 Monitoring & Logging</div>
+                                <div class="step-description">Health checks, metrics collection, structured logging, alerting</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <div class="step-title">🚀 Deployment & DevOps</div>
+                                <div class="step-description">Docker, CI/CD, environment management, zero-downtime deployments</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <div class="step-title">🛡️ Error Handling & Recovery</div>
+                                <div class="step-description">Graceful error handling, circuit breakers, backup strategies</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "🐳 Docker & Containerization",
+                content: `
+                    <h3>Why Docker for Production?</h3>
+                    <ul>
+                        <li><span class="marker-blue">Consistency:</span> Same environment from dev to production</li>
+                        <li><span class="marker-blue">Scalability:</span> Easy horizontal scaling</li>
+                        <li><span class="marker-blue">Isolation:</span> Secure process isolation</li>
+                        <li><span class="marker-green">Efficiency:</span> Optimized resource usage</li>
+                    </ul>
+
+                    <h3>Multi-Stage Docker Build</h3>
+                    <div class="code-example">
+                        <div class="code-line"># Stage 1: Dependencies</div>
+                        <div class="code-line">FROM node:18-alpine AS dependencies</div>
+                        <div class="code-line">WORKDIR /app</div>
+                        <div class="code-line">COPY package*.json ./</div>
+                        <div class="code-line">RUN npm ci --only=production</div>
+                        <div class="code-line"></div>
+                        <div class="code-line"># Stage 2: Builder</div>
+                        <div class="code-line">FROM node:18-alpine AS builder</div>
+                        <div class="code-line">COPY . .</div>
+                        <div class="code-line">RUN npm run build</div>
+                        <div class="code-line"></div>
+                        <div class="code-line"># Stage 3: Production</div>
+                        <div class="code-line">FROM node:18-alpine AS production</div>
+                        <div class="code-line">COPY --from=dependencies /app/node_modules ./node_modules</div>
+                        <div class="code-line">COPY --from=builder /app/dist ./dist</div>
+                        <div class="code-line">EXPOSE 5000</div>
+                        <div class="code-line">CMD ["npm", "run", "prod"]</div>
+                    </div>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <span class="feature-icon">🏗️</span>
+                            <div class="feature-title">Multi-Stage Builds</div>
+                            <div class="feature-description">Smaller production images</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🔒</span>
+                            <div class="feature-title">Non-Root User</div>
+                            <div class="feature-description">Enhanced security</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">💚</span>
+                            <div class="feature-title">Health Checks</div>
+                            <div class="feature-description">Automated container monitoring</div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "🚀 CI/CD Pipeline",
+                content: `
+                    <h3>Complete Automated Workflow</h3>
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <div class="step-number">🔍</div>
+                            <div class="step-content">
+                                <div class="step-title">Quality Checks</div>
+                                <div class="step-description">ESLint, Prettier, security audit, code formatting</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">🧪</div>
+                            <div class="step-content">
+                                <div class="step-title">Testing Suite</div>
+                                <div class="step-description">Unit tests, integration tests, performance tests</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">🐳</div>
+                            <div class="step-content">
+                                <div class="step-title">Docker Build</div>
+                                <div class="step-description">Multi-stage build with security scanning</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">🚀</div>
+                            <div class="step-content">
+                                <div class="step-title">Deploy to Staging</div>
+                                <div class="step-description">Automated staging deployment with smoke tests</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">🎯</div>
+                            <div class="step-content">
+                                <div class="step-title">Production Deployment</div>
+                                <div class="step-description">Zero-downtime deployment with rollback capability</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-example">
+                        <div class="code-line">name: 🚀 Day 18 API CI/CD Pipeline</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">on:</div>
+                        <div class="code-line">  push:</div>
+                        <div class="code-line">    branches: [ main, develop ]</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">jobs:</div>
+                        <div class="code-line">  quality-checks:</div>
+                        <div class="code-line">    runs-on: ubuntu-latest</div>
+                        <div class="code-line">    steps:</div>
+                        <div class="code-line">      - uses: actions/checkout@v4</div>
+                        <div class="code-line">      - run: npm ci</div>
+                        <div class="code-line">      - run: npm run lint</div>
+                        <div class="code-line">      - run: npm run test</div>
+                        <div class="code-line">      - run: docker build -t api .</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">  deploy-production:</div>
+                        <div class="code-line">    if: github.ref == 'refs/heads/main'</div>
+                        <div class="code-line">    steps:</div>
+                        <div class="code-line">      - run: docker-compose up -d</div>
+                    </div>
+                `
+            },
+            {
+                title: "🔒 Security Hardening",
+                content: `
+                    <h3>Authentication & Authorization</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <span class="feature-icon">🔐</span>
+                            <div class="feature-title">JWT Authentication</div>
+                            <div class="feature-description">Secure token-based auth with Passport.js</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🛡️</span>
+                            <div class="feature-title">Password Security</div>
+                            <div class="feature-description">bcrypt hashing with salt rounds</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🚦</span>
+                            <div class="feature-title">Rate Limiting</div>
+                            <div class="feature-description">API protection against abuse</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🔒</span>
+                            <div class="feature-title">Security Headers</div>
+                            <div class="feature-description">Helmet.js comprehensive headers</div>
+                        </div>
+                    </div>
+
+                    <h3>Security Best Practices</h3>
+                    <div class="code-example">
+                        <div class="code-line">// Security middleware stack</div>
+                        <div class="code-line">app.use(helmet({</div>
+                        <div class="code-line">  contentSecurityPolicy: {</div>
+                        <div class="code-line">    directives: {</div>
+                        <div class="code-line">      defaultSrc: ["'self'"],</div>
+                        <div class="code-line">      scriptSrc: ["'self'"],</div>
+                        <div class="code-line">      styleSrc: ["'self'", "'unsafe-inline'"]</div>
+                        <div class="code-line">    }</div>
+                        <div class="code-line">  }</div>
+                        <div class="code-line">}));</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">// Rate limiting</div>
+                        <div class="code-line">const limiter = rateLimit({</div>
+                        <div class="code-line">  windowMs: 15 * 60 * 1000,</div>
+                        <div class="code-line">  max: 100,</div>
+                        <div class="code-line">  message: 'Too many requests'</div>
+                        <div class="code-line">});</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">// CORS configuration</div>
+                        <div class="code-line">app.use(cors({</div>
+                        <div class="code-line">  origin: process.env.ALLOWED_ORIGINS?.split(','),</div>
+                        <div class="code-line">  credentials: true</div>
+                        <div class="code-line">}));</div>
+                    </div>
+                `
+            },
+            {
+                title: "⚡ Performance Optimization",
+                content: `
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value"><200ms</div>
+                            <div class="metric-label">Response Time</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">1K+</div>
+                            <div class="metric-label">Requests/sec</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value"><0.1%</div>
+                            <div class="metric-label">Error Rate</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">99.9%</div>
+                            <div class="metric-label">Uptime</div>
+                        </div>
+                    </div>
+
+                    <h3>Performance Techniques</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <span class="feature-icon">🗜️</span>
+                            <div class="feature-title">Compression</div>
+                            <div class="feature-description">Gzip compression for reduced bandwidth</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">💾</span>
+                            <div class="feature-title">Caching</div>
+                            <div class="feature-description">Redis caching for frequently accessed data</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🗄️</span>
+                            <div class="feature-title">Database Optimization</div>
+                            <div class="feature-description">Connection pooling and query optimization</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">⚖️</span>
+                            <div class="feature-title">Load Balancing</div>
+                            <div class="feature-description">Distribute traffic across multiple instances</div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "📊 Monitoring & Observability",
+                content: `
+                    <h3>Complete Monitoring Stack</h3>
+                    <div class="tech-stack">
+                        <div class="tech-item">📈 Prometheus</div>
+                        <div class="tech-item">📊 Grafana</div>
+                        <div class="tech-item">🔍 Elasticsearch</div>
+                        <div class="tech-item">📝 Logstash</div>
+                        <div class="tech-item">🔔 Kibana</div>
+                        <div class="tech-item">📧 Alerting</div>
+                    </div>
+
+                    <h3>Health Check Endpoints</h3>
+                    <div class="code-example">
+                        <div class="code-line">// Health check endpoint</div>
+                        <div class="code-line">app.get('/api/health', (req, res) => {</div>
+                        <div class="code-line">  const healthCheck = {</div>
+                        <div class="code-line">    success: true,</div>
+                        <div class="code-line">    timestamp: new Date().toISOString(),</div>
+                        <div class="code-line">    uptime: process.uptime(),</div>
+                        <div class="code-line">    memory: process.memoryUsage(),</div>
+                        <div class="code-line">    database: mongoose.connection.readyState === 1,</div>
+                        <div class="code-line">    redis: redisClient?.isOpen</div>
+                        <div class="code-line">  };</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">  const statusCode = healthCheck.database ? 200 : 503;</div>
+                        <div class="code-line">  res.status(statusCode).json(healthCheck);</div>
+                        <div class="code-line">});</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">// Readiness check</div>
+                        <div class="code-line">app.get('/api/ready', async (req, res) => {</div>
+                        <div class="code-line">  try {</div>
+                        <div class="code-line">    await mongoose.connection.db.admin().ping();</div>
+                        <div class="code-line">    if (redisClient) await redisClient.ping();</div>
+                        <div class="code-line">    res.json({ success: true, message: 'Ready' });</div>
+                        <div class="code-line">  } catch (error) {</div>
+                        <div class="code-line">    res.status(503).json({ success: false });</div>
+                        <div class="code-line">  }</div>
+                        <div class="code-line">});</div>
+                    </div>
+                `
+            },
+            {
+                title: "🚀 Deployment Strategies",
+                content: `
+                    <h3>Zero-Downtime Deployment</h3>
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <div class="step-title">Create New Container</div>
+                                <div class="step-description">Build and start new container with updated code</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <div class="step-title">Health Check</div>
+                                <div class="step-description">Verify new container is healthy and ready</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <div class="step-title">Route Traffic</div>
+                                <div class="step-description">Switch load balancer to route traffic to new container</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <div class="step-title">Graceful Shutdown</div>
+                                <div class="step-description">Wait for existing connections to complete, then stop old container</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Deployment Tools</h3>
+                    <div class="tech-stack">
+                        <div class="tech-item">🐳 Docker</div>
+                        <div class="tech-item">🐙 Docker Compose</div>
+                        <div class="tech-item">☸️ Kubernetes</div>
+                        <div class="tech-item">⚙️ PM2</div>
+                        <div class="tech-item">🚀 GitHub Actions</div>
+                        <div class="tech-item">🔄 Blue-Green</div>
+                    </div>
+                `
+            },
+            {
+                title: "📈 Scaling & High Availability",
+                content: `
+                    <h3>Horizontal Scaling Strategies</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <span class="feature-icon">⚖️</span>
+                            <div class="feature-title">Load Balancing</div>
+                            <div class="feature-description">Distribute traffic across multiple instances</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🗄️</span>
+                            <div class="feature-title">Database Clustering</div>
+                            <div class="feature-description">MongoDB replica sets for high availability</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">💾</span>
+                            <div class="feature-title">Redis Clustering</div>
+                            <div class="feature-description">Distributed caching and session storage</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🌐</span>
+                            <div class="feature-title">CDN Integration</div>
+                            <div class="feature-description">Global content delivery for static assets</div>
+                        </div>
+                    </div>
+
+                    <h3>Scaling Commands</h3>
+                    <div class="code-example">
+                        <div class="code-line"># Scale with Docker Compose</div>
+                        <div class="code-line">docker-compose up -d --scale api=5</div>
+                        <div class="code-line"></div>
+                        <div class="code-line"># Scale with Kubernetes</div>
+                        <div class="code-line">kubectl scale deployment day18-api --replicas=10</div>
+                        <div class="code-line"></div>
+                        <div class="code-line"># Load balancer configuration</div>
+                        <div class="code-line">upstream api_backend {</div>
+                        <div class="code-line">    server api1:5000;</div>
+                        <div class="code-line">    server api2:5000;</div>
+                        <div class="code-line">    server api3:5000;</div>
+                        <div class="code-line">    server api4:5000;</div>
+                        <div class="code-line">    server api5:5000;</div>
+                        <div class="code-line">}</div>
+                    </div>
+                `
+            },
+            {
+                title: "🏗️ Production Architecture",
+                content: `
+                    <h3>Complete Production Stack</h3>
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <div class="step-number">🌐</div>
+                            <div class="step-content">
+                                <div class="step-title">Load Balancer (Nginx)</div>
+                                <div class="step-description">SSL termination, rate limiting, request routing</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">🚀</div>
+                            <div class="step-content">
+                                <div class="step-title">API Application (Node.js)</div>
+                                <div class="step-description">Express server with clustering, monitoring, caching</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">🗄️</div>
+                            <div class="step-content">
+                                <div class="step-title">Database (MongoDB)</div>
+                                <div class="step-description">Replica set with connection pooling and indexing</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">💾</div>
+                            <div class="step-content">
+                                <div class="step-title">Cache (Redis)</div>
+                                <div class="step-description">Session storage, data caching, pub/sub</div>
+                            </div>
+                        </div>
+
+                        <div class="workflow-step">
+                            <div class="step-number">📊</div>
+                            <div class="step-content">
+                                <div class="step-title">Monitoring Stack</div>
+                                <div class="step-description">Prometheus, Grafana, ELK stack for observability</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "🎯 Production Best Practices",
+                content: `
+                    <div class="comparison-table">
+                        <tr>
+                            <th>Category</th>
+                            <th>Best Practice</th>
+                            <th>Why It Matters</th>
+                        </tr>
+                        <tr>
+                            <td>🔒 Security</td>
+                            <td>Use HTTPS, environment variables, input validation</td>
+                            <td>Protects against attacks and data breaches</td>
+                        </tr>
+                        <tr>
+                            <td>⚡ Performance</td>
+                            <td>Caching, compression, database optimization</td>
+                            <td>Ensures fast response times and scalability</td>
+                        </tr>
+                        <tr>
+                            <td>📊 Monitoring</td>
+                            <td>Health checks, metrics, structured logging</td>
+                            <td>Early detection of issues and performance tracking</td>
+                        </tr>
+                        <tr>
+                            <td>🚀 Deployment</td>
+                            <td>CI/CD, zero-downtime, rollback capability</td>
+                            <td>Reliable releases with minimal downtime</td>
+                        </tr>
+                        <tr>
+                            <td>🛡️ Reliability</td>
+                            <td>Load balancing, redundancy, backup strategies</td>
+                            <td>High availability and disaster recovery</td>
+                        </tr>
+                        <tr>
+                            <td>📋 Documentation</td>
+                            <td>API docs, deployment guides, runbooks</td>
+                            <td>Knowledge sharing and troubleshooting</td>
+                        </tr>
+                    </div>
+
+                    <h3>Success Metrics</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">99.9%</div>
+                            <div class="metric-label">Uptime SLA</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value"><200ms</div>
+                            <div class="metric-label">Response Time</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">85%+</div>
+                            <div class="metric-label">Test Coverage</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">A+</div>
+                            <div class="metric-label">Security Score</div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "🎉 Day 18 Complete!",
+                content: `
+                    <div style="text-align: center; margin: 50px 0;">
+                        <div style="font-size: 4em; margin-bottom: 20px;">🎯🚀</div>
+                        <h3 style="font-size: 2.2em; margin-bottom: 20px;">Your API is Production Ready!</h3>
+                        <p style="font-size: 1.3rem; max-width: 600px; margin: 0 auto; margin-bottom: 40px;">
+                            You've mastered enterprise-grade deployment strategies and built a production-ready API
+                        </p>
+                    </div>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <span class="feature-icon">✅</span>
+                            <div class="feature-title">Production Server</div>
+                            <div class="feature-description">Security, performance, monitoring features</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">✅</span>
+                            <div class="feature-title">Docker Containerization</div>
+                            <div class="feature-description">Multi-stage builds and orchestration</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">✅</span>
+                            <div class="feature-title">CI/CD Pipeline</div>
+                            <div class="feature-description">Automated testing and deployment</div>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">✅</span>
+                            <div class="feature-title">Monitoring Stack</div>
+                            <div class="feature-description">Complete observability solution</div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; color: white;">
+                        <h3 style="font-size: 1.8em; margin-bottom: 20px;">🚀 Ready for Production!</h3>
+                        <p style="font-size: 1.2rem; opacity: 0.9;">
+                            Your MERN Stack API is now enterprise-ready with all the features needed for production deployment
+                        </p>
+                        <div style="font-size: 2em; margin-top: 20px;">
+                            🎊 <span class="highlight">Day 18: COMPLETE!</span> 🎊
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlide = 0;
+
+        function renderSlides() {
+            const container = document.getElementById('slideshow-container');
+            container.innerHTML = '';
+
+            slideContent.forEach((slide, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide ' + (index === 0 ? 'active' : '');
+
+                slideDiv.innerHTML = `
+                    <div class="slide-content">
+                        <h1 class="slide-title">` + slide.title + `</h1>
+                        <div>` + slide.content + `</div>
+                    </div>
+                    <div class="slide-footer">Day 18 | Slide ` + (index + 1) + ` / ` + slideContent.length + `</div>
+                `;
+
+                container.appendChild(slideDiv);
+            });
+
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slide-counter');
+
+            slideCounter.textContent = (currentSlide + 1) + ' / ' + slideContent.length;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slideContent.length - 1;
+        }
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            currentSlide = n;
+            updateNavigation();
+        }
+
+        function nextSlide() {
+            if (currentSlide < slideContent.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        renderSlides();
+    </script>
+</body>
+</html>

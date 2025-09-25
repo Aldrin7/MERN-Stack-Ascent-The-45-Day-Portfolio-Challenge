@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 16: Combined APIs - MERN Stack Ascent</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="brand">
+                    <span class="brand-icon">🔗</span>
+                    <div class="brand-info">
+                        <h1>Combined APIs</h1>
+                        <p>Day 16: Multi-Resource API Architecture</p>
+                    </div>
+                </div>
+                <div class="status">
+                    <div class="status-indicator active"></div>
+                    <span>Server Running</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showSection('overview')">Overview</button>
+                <button class="nav-tab" onclick="showSection('endpoints')">API Endpoints</button>
+                <button class="nav-tab" onclick="showSection('testing')">Testing</button>
+                <button class="nav-tab" onclick="showSection('analytics')">Analytics</button>
+                <button class="nav-tab" onclick="showSection('sync')">Data Sync</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Overview Section -->
+        <section id="overview-section" class="section active">
+            <div class="container">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon">🎯</div>
+                        <h3>Multi-Resource Architecture</h3>
+                        <p>Unified endpoints serving complex data relationships across Work Experience, Projects, and Skills APIs.</p>
+                    </div>
+
+                    <div class="overview-card">
+                        <div class="card-icon">📊</div>
+                        <h3>Advanced Analytics</h3>
+                        <p>Real-time insights and analytics combining data from multiple sources for comprehensive user profiles.</p>
+                    </div>
+
+                    <div class="overview-card">
+                        <div class="card-icon">🔍</div>
+                        <h3>Cross-Resource Search</h3>
+                        <p>Powerful search functionality that spans across all resources with relevance ranking.</p>
+                    </div>
+
+                    <div class="overview-card">
+                        <div class="card-icon">🔄</div>
+                        <h3>Data Synchronization</h3>
+                        <p>Automatic data consistency and synchronization across distributed resources.</p>
+                    </div>
+                </div>
+
+                <div class="architecture-diagram">
+                    <h3>System Architecture</h3>
+                    <div class="diagram">
+                        <div class="diagram-layer frontend">
+                            <h4>Frontend (React)</h4>
+                            <div class="layer-content">
+                                <span>📱 Dashboard</span>
+                                <span>📊 Analytics</span>
+                                <span>🔍 Search</span>
+                            </div>
+                        </div>
+
+                        <div class="diagram-arrow">↓</div>
+
+                        <div class="diagram-layer api">
+                            <h4>Combined API Layer</h4>
+                            <div class="layer-content">
+                                <span>🔗 Profile Controller</span>
+                                <span>🔍 Search Controller</span>
+                                <span>📊 Analytics Controller</span>
+                                <span>🔄 Sync Service</span>
+                            </div>
+                        </div>
+
+                        <div class="diagram-arrow">↓</div>
+
+                        <div class="diagram-layer resources">
+                            <h4>Data Resources</h4>
+                            <div class="layer-content">
+                                <span>💼 Work Experience</span>
+                                <span>🚀 Projects</span>
+                                <span>🛠️ Skills</span>
+                                <span>👤 Users</span>
+                            </div>
+                        </div>
+
+                        <div class="diagram-arrow">↓</div>
+
+                        <div class="diagram-layer database">
+                            <h4>MongoDB Database</h4>
+                            <div class="layer-content">
+                                <span>📦 Collections</span>
+                                <span>🔗 Relationships</span>
+                                <span>📈 Aggregation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Endpoints Section -->
+        <section id="endpoints-section" class="section">
+            <div class="container">
+                <div class="endpoints-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <code>/api/profile/:userId/complete</code>
+                        </div>
+                        <div class="endpoint-description">
+                            <p>Get complete user profile with all relationships</p>
+                            <div class="response">
+                                <strong>Response:</strong> User + Work Experience + Projects + Skills + Analytics
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <code>/api/search</code>
+                        </div>
+                        <div class="endpoint-description">
+                            <p>Search across all resources</p>
+                            <div class="params">
+                                <strong>Parameters:</strong> q, type, userId, limit, page, sort
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <code>/api/analytics/technology</code>
+                        </div>
+                        <div class="endpoint-description">
+                            <p>Get technology usage analytics</p>
+                            <div class="params">
+                                <strong>Parameters:</strong> userId, period (year|6months|3months|month)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <code>/api/sync/skills/:userId</code>
+                        </div>
+                        <div class="endpoint-description">
+                            <p>Sync skill proficiency based on usage</p>
+                            <div class="response">
+                                <strong>Response:</strong> Sync results with updated skills
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <code>/api/sync/validate/:userId</code>
+                        </div>
+                        <div class="endpoint-description">
+                            <p>Validate data consistency across resources</p>
+                            <div class="response">
+                                <strong>Response:</strong> Validation results and data statistics
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-examples">
+                    <h3>Usage Examples</h3>
+
+                    <div class="code-block">
+                        <h4>Complete Profile Request</h4>
+                        <pre><code>GET /api/profile/64f1a2b3c4d5e6f7g8h9i0j1/complete
+
+Response: {
+  "success": true,
+  "data": {
+    "user": { /* user data */ },
+    "workExperience": [ /* work experience */ ],
+    "projects": [ /* projects */ ],
+    "skills": [ /* skills */ ],
+    "analytics": {
+      "totalExperience": 24,
+      "technologyStats": [ /* tech usage */ ],
+      "skillProficiency": { /* skill levels */ }
+    }
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <h4>Cross-Resource Search</h4>
+                        <pre><code>GET /api/search?q=react&type=all&limit=5
+
+Response: {
+  "success": true,
+  "data": {
+    "projects": [ /* projects with react */ ],
+    "workExperience": [ /* experience with react */ ],
+    "skills": [ /* react skills */ ]
+  },
+  "meta": {
+    "totalResults": 12,
+    "query": "react"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testing Section -->
+        <section id="testing-section" class="section">
+            <div class="container">
+                <div class="testing-interface">
+                    <div class="test-controls">
+                        <h3>API Testing Interface</h3>
+                        <div class="test-inputs">
+                            <div class="input-group">
+                                <label for="base-url">Base URL:</label>
+                                <input type="text" id="base-url" value="http://localhost:5000/api" readonly>
+                            </div>
+                            <div class="input-group">
+                                <label for="test-endpoint">Endpoint:</label>
+                                <select id="test-endpoint">
+                                    <option value="/profile/64f1a2b3c4d5e6f7g8h9i0j1/complete">Complete Profile</option>
+                                    <option value="/search?q=react">Search React</option>
+                                    <option value="/analytics/technology?userId=64f1a2b3c4d5e6f7g8h9i0j1">Technology Analytics</option>
+                                </select>
+                            </div>
+                            <button id="test-btn" class="btn-primary">Test Endpoint</button>
+                        </div>
+                    </div>
+
+                    <div class="test-results">
+                        <h4>Response</h4>
+                        <div id="test-response" class="response-display">
+                            <p class="placeholder">Click "Test Endpoint" to see response</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="test-scenarios">
+                    <h3>Test Scenarios</h3>
+                    <div class="scenarios-grid">
+                        <div class="scenario-card">
+                            <h4>✅ Complete Profile Test</h4>
+                            <p>Test the unified profile endpoint with all relationships</p>
+                            <div class="scenario-status" id="profile-test-status">Not Tested</div>
+                        </div>
+
+                        <div class="scenario-card">
+                            <h4>✅ Search Functionality Test</h4>
+                            <p>Test cross-resource search with different query types</p>
+                            <div class="scenario-status" id="search-test-status">Not Tested</div>
+                        </div>
+
+                        <div class="scenario-card">
+                            <h4>✅ Analytics Test</h4>
+                            <p>Test technology usage analytics and insights</p>
+                            <div class="scenario-status" id="analytics-test-status">Not Tested</div>
+                        </div>
+
+                        <div class="scenario-card">
+                            <h4>✅ Data Sync Test</h4>
+                            <p>Test data synchronization and consistency</p>
+                            <div class="scenario-status" id="sync-test-status">Not Tested</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics-section" class="section">
+            <div class="container">
+                <div class="analytics-dashboard">
+                    <div class="analytics-header">
+                        <h3>Real-Time Analytics</h3>
+                        <div class="analytics-controls">
+                            <select id="analytics-period">
+                                <option value="all">All Time</option>
+                                <option value="year">Last Year</option>
+                                <option value="6months">Last 6 Months</option>
+                                <option value="3months">Last 3 Months</option>
+                            </select>
+                            <button id="refresh-analytics" class="btn-secondary">Refresh</button>
+                        </div>
+                    </div>
+
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="card-header">
+                                <h4>Technology Usage</h4>
+                                <span class="metric" id="tech-count">0</span>
+                            </div>
+                            <div class="chart-container">
+                                <div id="tech-chart" class="chart-placeholder">
+                                    <div class="chart-icon">📊</div>
+                                    <p>Technology usage distribution</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <div class="card-header">
+                                <h4>Project Statistics</h4>
+                                <span class="metric" id="project-count">0</span>
+                            </div>
+                            <div class="chart-container">
+                                <div id="project-chart" class="chart-placeholder">
+                                    <div class="chart-icon">🚀</div>
+                                    <p>Project status distribution</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <div class="card-header">
+                                <h4>Skill Proficiency</h4>
+                                <span class="metric" id="skill-avg">0.0</span>
+                            </div>
+                            <div class="chart-container">
+                                <div id="skill-chart" class="chart-placeholder">
+                                    <div class="chart-icon">🛠️</div>
+                                    <p>Average skill proficiency</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <div class="card-header">
+                                <h4>Career Timeline</h4>
+                                <span class="metric" id="exp-months">0</span>
+                            </div>
+                            <div class="chart-container">
+                                <div id="timeline-chart" class="chart-placeholder">
+                                    <div class="chart-icon">💼</div>
+                                    <p>Total experience in months</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insights-section">
+                        <h4>AI-Powered Insights</h4>
+                        <div class="insights-list" id="insights-list">
+                            <div class="insight-item">
+                                <div class="insight-icon">💡</div>
+                                <div class="insight-content">
+                                    <p>Loading insights...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Sync Section -->
+        <section id="sync-section" class="section">
+            <div class="container">
+                <div class="sync-dashboard">
+                    <div class="sync-header">
+                        <h3>Data Synchronization</h3>
+                        <p>Keep your data consistent across all resources</p>
+                    </div>
+
+                    <div class="sync-controls">
+                        <div class="sync-action">
+                            <h4>Skill Proficiency Sync</h4>
+                            <p>Automatically update skill levels based on project usage</p>
+                            <button id="sync-skills-btn" class="btn-primary">Sync Skills</button>
+                        </div>
+
+                        <div class="sync-action">
+                            <h4>Project Technology Discovery</h4>
+                            <p>Find new technologies from project descriptions</p>
+                            <button id="sync-projects-btn" class="btn-primary">Discover Technologies</button>
+                        </div>
+
+                        <div class="sync-action">
+                            <h4>Data Validation</h4>
+                            <p>Check data consistency across all resources</p>
+                            <button id="validate-data-btn" class="btn-secondary">Validate Data</button>
+                        </div>
+                    </div>
+
+                    <div class="sync-results">
+                        <h4>Sync Results</h4>
+                        <div id="sync-output" class="sync-output">
+                            <p class="placeholder">Run a sync operation to see results</p>
+                        </div>
+                    </div>
+
+                    <div class="data-consistency">
+                        <h4>Data Consistency Report</h4>
+                        <div class="consistency-metrics">
+                            <div class="metric-item">
+                                <span class="metric-label">Work Experience Records:</span>
+                                <span class="metric-value" id="work-exp-count">0</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Project Records:</span>
+                                <span class="metric-value" id="sync-project-count">0</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Skill Records:</span>
+                                <span class="metric-value" id="sync-skill-count">0</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Orphaned Records:</span>
+                                <span class="metric-value error" id="sync-orphaned-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Day 16: Combined APIs</h4>
+                    <p>Multi-resource API architecture with advanced analytics and data synchronization.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul>
+                        <li>Unified Endpoints</li>
+                        <li>Cross-Resource Search</li>
+                        <li>Advanced Analytics</li>
+                        <li>Data Synchronization</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Technologies</h4>
+                    <ul>
+                        <li>Node.js & Express</li>
+                        <li>MongoDB & Mongoose</li>
+                        <li>Aggregation Pipelines</li>
+                        <li>Redis Caching</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MERN Stack Ascent - Day 16: Combined APIs</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

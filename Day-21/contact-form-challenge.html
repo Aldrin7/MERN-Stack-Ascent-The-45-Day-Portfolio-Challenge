@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React State Challenge - Contact Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .contact-form {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .form-title h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-title p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            animation: slideIn 0.5s ease;
+        }
+
+        .success-message strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .demo-title h3 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .demo-title p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .demo-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .demo-btn.secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .state-display {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .state-display h4 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .state-json {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .contact-form {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .demo-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .demo-btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Day 21: React State Challenge</h1>
+            <p>Interactive Contact Form with useState Hook</p>
+        </div>
+
+        <div id="root">
+            <!-- React app will render here -->
+        </div>
+
+        <div class="demo-section">
+            <div class="demo-title">
+                <h3>🎮 State Management Demo</h3>
+                <p>Watch how React state changes in real-time</p>
+            </div>
+
+            <div class="demo-controls">
+                <button class="demo-btn primary" onclick="simulateFormFill()">Fill Form</button>
+                <button class="demo-btn secondary" onclick="simulateFormSubmit()">Submit Form</button>
+                <button class="demo-btn secondary" onclick="resetDemo()">Reset</button>
+            </div>
+
+            <div class="state-display">
+                <h4>Current React State:</h4>
+                <div class="state-json" id="state-display">
+                    {/* State will be displayed here */}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- React CDN Scripts -->
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- React Components -->
+    <script type="text/babel">
+        // ContactForm component with individual useState hooks for each input field
+        function ContactForm() {
+            // Individual state variables for each input field
+            const [name, setName] = React.useState('');
+            const [email, setEmail] = React.useState('');
+            const [message, setMessage] = React.useState('');
+
+            // Handle form submission
+            const handleSubmit = (e) => {
+                e.preventDefault(); // Prevent form from submitting and page from refreshing
+                alert(`Form submitted!\nName: ${name}\nEmail: ${email}\nMessage: ${message}`);
+            };
+
+            return (
+                <div className="contact-form">
+                    <div className="form-title">
+                        <h2>Contact Form</h2>
+                        <p>Fill out the form below and we'll get back to you!</p>
+                    </div>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="name">Name</label>
+                            <input
+                                type="text"
+                                id="name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Enter your name"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your email"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="message">Message</label>
+                            <textarea
+                                id="message"
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                placeholder="Enter your message"
+                            />
+                        </div>
+
+                        <button type="submit" className="submit-btn">
+                            Send Message
+                        </button>
+                    </form>
+
+                    {/* Display current state values */}
+                    <div style={{ marginTop: '30px', padding: '20px', background: '#f8f9fa', borderRadius: '8px', fontFamily: 'monospace', fontSize: '14px' }}>
+                        <h4 style={{ marginBottom: '10px', color: '#333' }}>Current State Values:</h4>
+                        <div><strong>Name:</strong> "{name}"</div>
+                        <div><strong>Email:</strong> "{email}"</div>
+                        <div><strong>Message:</strong> "{message}"</div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the ContactForm component
+        ReactDOM.render(<ContactForm />, document.getElementById('root'));
+    </script>
+
+    <!-- Demo Functions -->
+    <script>
+        function simulateFormFill() {
+            // This will be handled by React state updates
+            const event = new Event('input', { bubbles: true });
+
+            // Simulate filling form fields
+            setTimeout(() => {
+                const nameInput = document.getElementById('name');
+                const emailInput = document.getElementById('email');
+                const messageInput = document.getElementById('message');
+
+                if (nameInput) {
+                    nameInput.value = 'John Doe';
+                    nameInput.dispatchEvent(event);
+                }
+
+                if (emailInput) {
+                    emailInput.value = 'john.doe@example.com';
+                    emailInput.dispatchEvent(event);
+                }
+
+                if (messageInput) {
+                    messageInput.value = 'This is a test message to demonstrate the form functionality.';
+                    messageInput.dispatchEvent(event);
+                }
+            }, 100);
+        }
+
+        function simulateFormSubmit() {
+            const submitBtn = document.querySelector('.submit-btn');
+            if (submitBtn && !submitBtn.disabled) {
+                submitBtn.click();
+            }
+        }
+
+        function resetDemo() {
+            // Reset form by triggering React state reset
+            const form = document.querySelector('form');
+            if (form) {
+                const inputs = form.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    input.value = '';
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                });
+            }
+        }
+
+        // Initialize state display
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStateDisplay();
+        });
+
+        function updateStateDisplay() {
+            const demoElement = document.getElementById('state-display');
+            if (demoElement && !demoElement.textContent.trim()) {
+                demoElement.textContent = JSON.stringify({
+                    formData: { name: '', email: '', message: '' },
+                    errors: {},
+                    isSubmitted: false,
+                    isSubmitting: false
+                }, null, 2);
+            }
+        }
+    </script>
+</body>
+</html>

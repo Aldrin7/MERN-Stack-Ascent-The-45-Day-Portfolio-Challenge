@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 12: Rest & Review - Complete REST API Mastery</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🧘‍♂️ Rest & Review</h1>
+            <p class="subtitle">Complete REST API Mastery - Review & Practice</p>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">0 / 5 Exercises Completed</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Knowledge Checkpoint -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>🎯 Knowledge Checkpoint</h2>
+                    <p>Assess your understanding of CRUD operations</p>
+                </div>
+
+                <div class="checkpoint-grid">
+                    <div class="checkpoint-card" data-topic="mongodb">
+                        <h3>🗄️ MongoDB Fundamentals</h3>
+                        <div class="checkpoint-items">
+                            <label><input type="checkbox" data-skill="connection"> Can connect to MongoDB</label>
+                            <label><input type="checkbox" data-skill="collections"> Understand collections & documents</label>
+                            <label><input type="checkbox" data-skill="crud"> Can use CRUD operations</label>
+                            <label><input type="checkbox" data-skill="objectid"> Understand ObjectId</label>
+                            <label><input type="checkbox" data-skill="queries"> Can write efficient queries</label>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-card" data-topic="express">
+                        <h3>🚀 Express.js API Development</h3>
+                        <div class="checkpoint-items">
+                            <label><input type="checkbox" data-skill="server"> Can set up Express server</label>
+                            <label><input type="checkbox" data-skill="routes"> Understand route parameters</label>
+                            <label><input type="checkbox" data-skill="middleware"> Can handle req/res objects</label>
+                            <label><input type="checkbox" data-skill="json"> Master error handling</label>
+                            <label><input type="checkbox" data-skill="async"> Can implement authentication</label>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-card" data-topic="rest">
+                        <h3>🌐 REST API Principles</h3>
+                        <div class="checkpoint-items">
+                            <label><input type="checkbox" data-skill="http"> Know HTTP methods</label>
+                            <label><input type="checkbox" data-skill="status"> Understand status codes</label>
+                            <label><input type="checkbox" data-skill="body"> Can parse request bodies</label>
+                            <label><input type="checkbox" data-skill="params"> Handle URL parameters</label>
+                            <label><input type="checkbox" data-skill="design"> Design RESTful endpoints</label>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint-card" data-topic="crud">
+                        <h3>✅ Complete CRUD Operations</h3>
+                        <div class="checkpoint-items">
+                            <label><input type="checkbox" data-skill="create"> Implement POST (Create)</label>
+                            <label><input type="checkbox" data-skill="read"> Implement GET (Read)</label>
+                            <label><input type="checkbox" data-skill="update"> Implement PUT (Update)</label>
+                            <label><input type="checkbox" data-skill="delete"> Implement DELETE</label>
+                            <label><input type="checkbox" data-skill="error"> Handle all error cases</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkpoint-actions">
+                    <button onclick="checkProgress()" class="btn btn-primary">
+                        <span class="btn-icon">📊</span>
+                        Check Progress
+                    </button>
+                    <button onclick="resetCheckpoints()" class="btn btn-secondary">
+                        <span class="btn-icon">🔄</span>
+                        Reset All
+                    </button>
+                </div>
+            </section>
+
+            <!-- Practice Exercises -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>🧪 Practice Exercises</h2>
+                    <p>Hands-on practice to reinforce your learning</p>
+                </div>
+
+                <div class="exercises-grid">
+                    <div class="exercise-card" id="exercise1">
+                        <div class="exercise-header">
+                            <h3>📝 Exercise 1: Blog API</h3>
+                            <span class="exercise-status" id="exercise1-status">Not Started</span>
+                        </div>
+                        <p>Build a complete REST API for managing blog posts</p>
+                        <div class="exercise-details">
+                            <h4>Requirements:</h4>
+                            <ul>
+                                <li>POST /api/posts - Create blog post</li>
+                                <li>GET /api/posts - Get all posts</li>
+                                <li>PUT /api/posts/:id - Update post</li>
+                                <li>DELETE /api/posts/:id - Delete post</li>
+                            </ul>
+                            <div class="code-example">
+                                <h5>Blog Post Schema:</h5>
+                                <pre>{
+  "title": "My Blog Post",
+  "content": "Full post content...",
+  "author": "John Doe",
+  "tags": ["javascript", "nodejs"],
+  "published": true
+}</pre>
+                            </div>
+                        </div>
+                        <div class="exercise-actions">
+                            <button onclick="startExercise(1)" class="btn btn-primary">
+                                <span class="btn-icon">🚀</span>
+                                Start Exercise
+                            </button>
+                            <button onclick="completeExercise(1)" class="btn btn-success">
+                                <span class="btn-icon">✅</span>
+                                Mark Complete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card" id="exercise2">
+                        <div class="exercise-header">
+                            <h3>📋 Exercise 2: Task Manager API</h3>
+                            <span class="exercise-status" id="exercise2-status">Not Started</span>
+                        </div>
+                        <p>Create a task management system with advanced features</p>
+                        <div class="exercise-details">
+                            <h4>Requirements:</h4>
+                            <ul>
+                                <li>POST /api/tasks - Create task</li>
+                                <li>GET /api/tasks - Get tasks with filters</li>
+                                <li>PUT /api/tasks/:id - Update task</li>
+                                <li>DELETE /api/tasks/:id - Delete task</li>
+                                <li>PUT /api/tasks/:id/complete - Mark complete</li>
+                            </ul>
+                            <div class="code-example">
+                                <h5>Task Schema:</h5>
+                                <pre>{
+  "title": "Complete project",
+  "description": "Finish the full-stack app",
+  "priority": "high",
+  "completed": false,
+  "dueDate": "2025-09-01"
+}</pre>
+                            </div>
+                        </div>
+                        <div class="exercise-actions">
+                            <button onclick="startExercise(2)" class="btn btn-primary">
+                                <span class="btn-icon">🚀</span>
+                                Start Exercise
+                            </button>
+                            <button onclick="completeExercise(2)" class="btn btn-success">
+                                <span class="btn-icon">✅</span>
+                                Mark Complete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card" id="exercise3">
+                        <div class="exercise-header">
+                            <h3>👤 Exercise 3: User Management API</h3>
+                            <span class="exercise-status" id="exercise3-status">Not Started</span>
+                        </div>
+                        <p>Build a user management system with profiles</p>
+                        <div class="exercise-details">
+                            <h4>Requirements:</h4>
+                            <ul>
+                                <li>POST /api/users - Register user</li>
+                                <li>GET /api/users - Get all users</li>
+                                <li>GET /api/users/:id - Get user profile</li>
+                                <li>PUT /api/users/:id - Update profile</li>
+                                <li>DELETE /api/users/:id - Delete account</li>
+                            </ul>
+                            <div class="code-example">
+                                <h5>User Schema:</h5>
+                                <pre>{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "user"
+}</pre>
+                            </div>
+                        </div>
+                        <div class="exercise-actions">
+                            <button onclick="startExercise(3)" class="btn btn-primary">
+                                <span class="btn-icon">🚀</span>
+                                Start Exercise
+                            </button>
+                            <button onclick="completeExercise(3)" class="btn btn-success">
+                                <span class="btn-icon">✅</span>
+                                Mark Complete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card" id="exercise4">
+                        <div class="exercise-header">
+                            <h3>📦 Exercise 4: Product Inventory API</h3>
+                            <span class="exercise-status" id="exercise4-status">Not Started</span>
+                        </div>
+                        <p>Create a product inventory management system</p>
+                        <div class="exercise-details">
+                            <h4>Requirements:</h4>
+                            <ul>
+                                <li>POST /api/products - Add product</li>
+                                <li>GET /api/products - List products</li>
+                                <li>PUT /api/products/:id - Update product</li>
+                                <li>DELETE /api/products/:id - Remove product</li>
+                                <li>GET /api/products/:id/stock - Check stock</li>
+                            </ul>
+                            <div class="code-example">
+                                <h5>Product Schema:</h5>
+                                <pre>{
+  "name": "Wireless Headphones",
+  "price": 199.99,
+  "category": "Electronics",
+  "stock": 50,
+  "sku": "WH-001"
+}</pre>
+                            </div>
+                        </div>
+                        <div class="exercise-actions">
+                            <button onclick="startExercise(4)" class="btn btn-primary">
+                                <span class="btn-icon">🚀</span>
+                                Start Exercise
+                            </button>
+                            <button onclick="completeExercise(4)" class="btn btn-success">
+                                <span class="btn-icon">✅</span>
+                                Mark Complete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="exercise-card" id="exercise5">
+                        <div class="exercise-header">
+                            <h3>📚 Exercise 5: Library Management API</h3>
+                            <span class="exercise-status" id="exercise5-status">Not Started</span>
+                        </div>
+                        <p>Build a library book management system</p>
+                        <div class="exercise-details">
+                            <h4>Requirements:</h4>
+                            <ul>
+                                <li>POST /api/books - Add book</li>
+                                <li>GET /api/books - List all books</li>
+                                <li>PUT /api/books/:id - Update book</li>
+                                <li>DELETE /api/books/:id - Remove book</li>
+                                <li>PUT /api/books/:id/borrow - Borrow book</li>
+                            </ul>
+                            <div class="code-example">
+                                <h5>Book Schema:</h5>
+                                <pre>{
+  "title": "JavaScript Guide",
+  "author": "John Smith",
+  "isbn": "978-1234567890",
+  "available": true,
+  "genre": "Programming"
+}</pre>
+                            </div>
+                        </div>
+                        <div class="exercise-actions">
+                            <button onclick="startExercise(5)" class="btn btn-primary">
+                                <span class="btn-icon">🚀</span>
+                                Start Exercise
+                            </button>
+                            <button onclick="completeExercise(5)" class="btn btn-success">
+                                <span class="btn-icon">✅</span>
+                                Mark Complete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Code Reference -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>🔧 Code Reference</h2>
+                    <p>Essential code patterns and best practices</p>
+                </div>
+
+                <div class="reference-tabs">
+                    <div class="tab-buttons">
+                        <button onclick="showTab('mongodb')" class="tab-btn active" data-tab="mongodb">MongoDB</button>
+                        <button onclick="showTab('express')" class="tab-btn" data-tab="express">Express.js</button>
+                        <button onclick="showTab('crud')" class="tab-btn" data-tab="crud">CRUD Patterns</button>
+                        <button onclick="showTab('errors')" class="tab-btn" data-tab="errors">Error Handling</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <div id="mongodb-tab" class="tab-pane active">
+                            <h4>Essential MongoDB Patterns</h4>
+                            <div class="code-example">
+                                <h5>Connection & Setup:</h5>
+                                <pre>const { MongoClient } = require('mongodb');
+const client = new MongoClient('mongodb://localhost:27017');
+await client.connect();
+const db = client.db('myapp');</pre>
+                            </div>
+
+                            <div class="code-example">
+                                <h5>CRUD Operations:</h5>
+                                <pre>// Create
+await db.collection('items').insertOne(data);
+
+// Read
+await db.collection('items').find({}).toArray();
+
+// Update
+await db.collection('items').updateOne(
+  { _id: new ObjectId(id) },
+  { $set: updateData }
+);
+
+// Delete
+await db.collection('items').deleteOne(
+  { _id: new ObjectId(id) }
+);</pre>
+                            </div>
+                        </div>
+
+                        <div id="express-tab" class="tab-pane">
+                            <h4>Essential Express.js Patterns</h4>
+                            <div class="code-example">
+                                <h5>Server Setup:</h5>
+                                <pre>const express = require('express');
+const app = express();
+
+// Middleware
+app.use(express.json());
+
+// Routes
+app.get('/api/items', async (req, res) => {
+  // Handle GET request
+});
+
+app.listen(3000);</pre>
+                            </div>
+
+                            <div class="code-example">
+                                <h5>Route Parameters:</h5>
+                                <pre>// URL parameters
+app.get('/api/items/:id', async (req, res) => {
+  const id = req.params.id;
+  // Handle request
+});
+
+// Query parameters
+app.get('/api/items', async (req, res) => {
+  const { page, limit } = req.query;
+  // Handle request
+});</pre>
+                            </div>
+                        </div>
+
+                        <div id="crud-tab" class="tab-pane">
+                            <h4>Complete CRUD Implementation</h4>
+                            <div class="code-example">
+                                <h5>POST - Create:</h5>
+                                <pre>app.post('/api/items', async (req, res) => {
+  try {
+    const result = await db.collection('items')
+      .insertOne(req.body);
+    res.status(201).json({
+      success: true,
+      data: { ...req.body, _id: result.insertedId }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create item'
+    });
+  }
+});</pre>
+                            </div>
+
+                            <div class="code-example">
+                                <h5>GET - Read:</h5>
+                                <pre>app.get('/api/items', async (req, res) => {
+  try {
+    const items = await db.collection('items')
+      .find({}).toArray();
+    res.json({
+      success: true,
+      count: items.length,
+      data: items
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve items'
+    });
+  }
+});</pre>
+                            </div>
+                        </div>
+
+                        <div id="errors-tab" class="tab-pane">
+                            <h4>Error Handling Patterns</h4>
+                            <div class="code-example">
+                                <h5>ObjectId Validation:</h5>
+                                <pre>const { ObjectId } = require('mongodb');
+
+function isValidObjectId(id) {
+  return ObjectId.isValid(id) &&
+         new ObjectId(id).toString() === id;
+}
+
+// Usage in routes
+app.put('/api/items/:id', async (req, res) => {
+  if (!isValidObjectId(req.params.id)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid item ID format'
+    });
+  }
+  // Continue with valid ObjectId
+});</pre>
+                            </div>
+
+                            <div class="code-example">
+                                <h5>Not Found Handling:</h5>
+                                <pre>const result = await db.collection('items')
+  .updateOne(
+    { _id: new ObjectId(id) },
+    { $set: updateData }
+  );
+
+if (result.matchedCount === 0) {
+  return res.status(404).json({
+    success: false,
+    error: 'Item not found'
+  });
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Progress Summary -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>📊 Progress Summary</h2>
+                    <p>Track your learning progress and achievements</p>
+                </div>
+
+                <div class="progress-summary">
+                    <div class="summary-card">
+                        <h3>🎯 Self-Assessment</h3>
+                        <div class="progress-circle">
+                            <div class="progress-circle-fill" id="assessmentProgress"></div>
+                            <span class="progress-text" id="assessmentText">0%</span>
+                        </div>
+                        <p>Knowledge checkpoints completed</p>
+                    </div>
+
+                    <div class="summary-card">
+                        <h3>🧪 Practice Exercises</h3>
+                        <div class="progress-circle">
+                            <div class="progress-circle-fill" id="exerciseProgress"></div>
+                            <span class="progress-text" id="exerciseText">0%</span>
+                        </div>
+                        <p>Hands-on exercises completed</p>
+                    </div>
+
+                    <div class="summary-card">
+                        <h3>🏆 Overall Mastery</h3>
+                        <div class="progress-circle">
+                            <div class="progress-circle-fill" id="masteryProgress"></div>
+                            <span class="progress-text" id="masteryText">0%</span>
+                        </div>
+                        <p>Combined learning progress</p>
+                    </div>
+                </div>
+
+                <div class="achievements">
+                    <h3>🏅 Achievements Unlocked</h3>
+                    <div class="achievement-list" id="achievementList">
+                        <div class="achievement-item locked" data-achievement="first-exercise">
+                            <span class="achievement-icon">🎯</span>
+                            <span class="achievement-text">First Exercise Completed</span>
+                        </div>
+                        <div class="achievement-item locked" data-achievement="half-way">
+                            <span class="achievement-icon">🔥</span>
+                            <span class="achievement-text">Half Way There!</span>
+                        </div>
+                        <div class="achievement-item locked" data-achievement="all-exercises">
+                            <span class="achievement-icon">🚀</span>
+                            <span class="achievement-text">All Exercises Complete!</span>
+                        </div>
+                        <div class="achievement-item locked" data-achievement="master">
+                            <span class="achievement-icon">👑</span>
+                            <span class="achievement-text">CRUD Master!</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Full Stack Development Journey - Day 12: Rest & Review</p>
+            <div class="footer-links">
+                <a href="#" onclick="showHelp()">📋 Help</a>
+                <a href="#" onclick="exportProgress()">📊 Export Progress</a>
+                <a href="#" onclick="resetAll()">🔄 Reset Progress</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

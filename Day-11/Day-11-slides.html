@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 11: CRUD Operations - Update & Delete - Professional Slides</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kalam', cursive;
+            background-color: #f8f9fa;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            border: 15px solid #212529;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: opacity 0.5s ease-in-out;
+            padding: 30px 50px;
+            line-height: 1.6;
+            color: #343a40;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #6f42c1;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .slide-content {
+            font-size: 1.4rem;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .highlight {
+            color: #d63384;
+            font-weight: 700;
+        }
+
+        .code {
+            background-color: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            color: #000;
+            display: block;
+            white-space: pre-wrap;
+        }
+
+        ul {
+            list-style-type: '✏️ ';
+            padding-left: 40px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .slide-footer {
+            text-align: right;
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .marker-blue { color: #0d6efd; }
+        .marker-red { color: #dc3545; }
+        .marker-green { color: #198754; }
+
+        #navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        #navigation button {
+            font-family: 'Kalam', cursive;
+            font-size: 1.5rem;
+            padding: 10px 25px;
+            border: 3px solid #212529;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        #navigation button:hover:not(:disabled) {
+            background-color: #212529;
+            color: #fff;
+        }
+
+        #navigation button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #slide-counter {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        /* Custom styles for Day 11 content */
+        .slide-content h2 {
+            font-size: 2rem;
+            color: #6f42c1;
+            margin: 20px 0 15px 0;
+        }
+
+        .slide-content h3 {
+            font-size: 1.6rem;
+            color: #495057;
+            margin: 25px 0 15px 0;
+        }
+
+        .slide-content h4 {
+            font-size: 1.3rem;
+            color: #6c757d;
+            margin: 20px 0 10px 0;
+        }
+
+        .slide-content p {
+            margin-bottom: 15px;
+        }
+
+        .learning-objectives {
+            background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #6f42c1;
+        }
+
+        .learning-objectives h4 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .objective-item {
+            background: rgba(111, 66, 193, 0.1);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 3px solid #6f42c1;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            overflow-x: auto;
+        }
+
+        .code-example .code-line {
+            display: block;
+            margin: 2px 0;
+        }
+
+        .diagram {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .comparison-item {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comparison-item h4 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .key-points {
+            background: rgba(111, 66, 193, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .key-points h4 {
+            color: #6f42c1;
+            margin-bottom: 15px;
+        }
+
+        .key-point {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 3px solid #6f42c1;
+        }
+
+        .js-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+        }
+
+        .js-keyword {
+            color: #68d391;
+        }
+
+        .js-string {
+            color: #fbb6ce;
+        }
+
+        .js-comment {
+            color: #a0aec0;
+        }
+
+        .js-function {
+            color: #9f7aea;
+        }
+
+        .terminal {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .terminal .prompt {
+            color: #68d391;
+        }
+
+        .terminal .command {
+            color: #fbb6ce;
+        }
+
+        .terminal .output {
+            color: #a0aec0;
+        }
+
+        .status-table {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .status-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .status-table th, .status-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .status-table th {
+            background: #6f42c1;
+            color: white;
+            font-weight: bold;
+        }
+
+        .status-table tr:nth-child(even) {
+            background: rgba(111, 66, 193, 0.1);
+        }
+
+        .status-2xx {
+            background: #28a745;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+
+        .status-4xx {
+            background: #ffc107;
+            color: black;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+
+        .status-5xx {
+            background: #dc3545;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+
+        .json-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .json-key {
+            color: #68d391;
+        }
+
+        .json-string {
+            color: #fbb6ce;
+        }
+
+        .json-number {
+            color: #fbb6ce;
+        }
+
+        .json-boolean {
+            color: #fbb6ce;
+        }
+
+        .api-endpoint {
+            background: #f8f9fa;
+            border: 2px solid #6f42c1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            background: #6f42c1;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #6f42c1;
+        }
+
+        .data-flow {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: white;
+            border: 2px solid #6f42c1;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 120px;
+        }
+
+        .arrow {
+            display: inline-block;
+            font-size: 2rem;
+            color: #6f42c1;
+            margin: 0 10px;
+        }
+
+        .objectid-explanation {
+            background: #e9ecef;
+            border: 2px solid #6f42c1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .objectid-part {
+            display: inline-block;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Profile Section -->
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.9); padding: 8px 12px; border-radius: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <img src="https://aldrin.netlify.app/IMG_20250305_175533101_PORTRAIT.jpg" alt="Aldrin Manon" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #6f42c1;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: #6f42c1; margin: 0;">Aldrin Manon</h3>
+    </div>
+
+    <div id="slideshow-container"></div>
+
+    <div id="navigation">
+        <button id="prevBtn">← Prev</button>
+        <div id="slide-counter">1 / 10</div>
+        <button id="nextBtn">Next →</button>
+    </div>
+
+    <script>
+        const slideContent = [
+            {
+                title: "Day 11: Complete CRUD Operations",
+                content: `
+                    <h2>Update & Delete with MongoDB</h2>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <h3 style="font-size: 2.2rem; color: #6f42c1; margin-bottom: 20px;">🗄️ Database Operations: Update & Delete</h3>
+                        <p style="font-size: 1.5rem; color: #495057; max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                            Today you'll complete the CRUD operations by implementing <span class="highlight">Update</span> and <span class="highlight">Delete</span> with MongoDB.
+                            You'll learn about MongoDB ObjectIds and proper HTTP status codes!
+                        </p>
+                    </div>
+
+                    <div class="learning-objectives">
+                        <h4>🎯 Learning Objectives</h4>
+                        <div class="objective-item">
+                            <strong>🆔 MongoDB ObjectId:</strong> Understanding unique document identifiers
+                        </div>
+                        <div class="objective-item">
+                            <strong>📝 Update Operation:</strong> PUT requests with updateOne()
+                        </div>
+                        <div class="objective-item">
+                            <strong>🗑️ Delete Operation:</strong> DELETE requests with deleteOne()
+                        </div>
+                        <div class="objective-item">
+                            <strong>📊 HTTP Status Codes:</strong> Using correct response codes (201, 204, 400, 404)
+                        </div>
+                        <div class="objective-item">
+                            <strong>🔍 Result Validation:</strong> Checking operation success with result objects
+                        </div>
+                        <div class="objective-item">
+                            <strong>⚠️ Error Handling:</strong> Proper error responses for not found cases
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "MongoDB ObjectId",
+                content: `
+                    <h3>Understanding MongoDB's Unique Identifier System</h3>
+                    <p><span class="highlight">ObjectId</span> is MongoDB's unique identifier for documents. It's a 12-byte BSON type that guarantees uniqueness across your database and is automatically generated for every document.</p>
+
+                    <div class="objectid-explanation">
+                        <h4>🔍 ObjectId Structure (12 bytes):</h4>
+                        <div class="objectid-part">Timestamp<br><small>4 bytes</small></div>
+                        <div class="objectid-part">Machine ID<br><small>3 bytes</small></div>
+                        <div class="objectid-part">Process ID<br><small>2 bytes</small></div>
+                        <div class="objectid-part">Counter<br><small>3 bytes</small></div>
+                    </div>
+
+                    <h3>Why ObjectId Matters:</h3>
+                    <ul>
+                        <li><span class="marker-green">🎯 Uniqueness:</span> Guaranteed unique across your entire database</li>
+                        <li><span class="marker-green">⏰ Timestamps:</span> Contains creation timestamp (first 4 bytes)</li>
+                        <li><span class="marker-green">🔗 References:</span> Perfect for document relationships</li>
+                        <li><span class="marker-green">📊 Indexing:</span> Automatically indexed for fast queries</li>
+                        <li><span class="marker-green">🚀 Performance:</span> Optimized for distributed systems</li>
+                    </ul>
+
+                    <h3>Working with ObjectIds in Node.js:</h3>
+
+                    <div class="js-code">
+                        <div><span class="js-keyword">const</span> { ObjectId } = <span class="js-function">require</span>(<span class="js-string">'mongodb'</span>);</div>
+                        <div></div>
+                        <div><span class="js-comment">// Create new ObjectId</span></div>
+                        <div><span class="js-keyword">const</span> newId = <span class="js-keyword">new</span> ObjectId(); <span class="js-comment">// Auto-generated</span></div>
+                        <div>console.log(newId.toString()); <span class="js-comment">// "507f1f77bcf86cd799439011"</span></div>
+                        <div></div>
+                        <div><span class="js-comment">// Convert string to ObjectId</span></div>
+                        <div><span class="js-keyword">const</span> projectId = <span class="js-keyword">new</span> ObjectId(<span class="js-string">"507f1f77bcf86cd799439011"</span>);</div>
+                        <div></div>
+                        <div><span class="js-comment">// Use in queries</span></div>
+                        <div><span class="js-keyword">const</span> project = <span class="js-keyword">await</span> db.collection(<span class="js-string">'projects'</span>).findOne({</div>
+                        <div>  _id: projectId</div>
+                        <div>});</div>
+                    </div>
+
+                    <div class="key-points">
+                        <h4>💡 ObjectId Best Practices:</h4>
+                        <div class="key-point">
+                            <strong>Always convert:</strong> Convert string IDs to ObjectId for queries
+                        </div>
+                        <div class="key-point">
+                            <strong>Validation:</strong> Check if string is valid ObjectId format
+                        </div>
+                        <div class="key-point">
+                            <strong>Error handling:</strong> Handle invalid ObjectId errors gracefully
+                        </div>
+                        <div class="key-point">
+                            <strong>Timestamps:</strong> Use getTimestamp() to extract creation time
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Update Operation (PUT)",
+                content: `
+                    <h3>Modifying Data with PUT and updateOne()</h3>
+                    <p>The <span class="highlight">Update</span> operation modifies existing documents in your MongoDB collection. It uses PUT requests and the <code>updateOne()</code> method to update data persistently.</p>
+
+                    <h3>PUT Request Flow:</h3>
+
+                    <div class="data-flow">
+                        <h4>📝 Update Operation Flow</h4>
+                        <div class="flow-step">
+                            <strong>Client</strong><br>
+                            <small>PUT /api/projects/123</small>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="flow-step">
+                            <strong>Express</strong><br>
+                            <small>req.params.id</small>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="flow-step">
+                            <strong>MongoDB</strong><br>
+                            <small>updateOne()</small>
+                        </div>
+                    </div>
+
+                    <h3>Implementing Update Operation:</h3>
+
+                    <div class="js-code">
+                        <div><span class="js-comment">// PUT /api/projects/:id - Update project (Challenge Requirement)</span></div>
+                        <div>app.put(<span class="js-string">'/api/projects/:id'</span>, <span class="js-keyword">async</span> (req, res) => {</div>
+                        <div>  <span class="js-keyword">try</span> {</div>
+                        <div>    <span class="js-keyword">const</span> projectId = req.params.id;</div>
+                        <div></div>
+                        <div>    <span class="js-comment">// Convert string ID to ObjectId (Challenge Requirement)</span></div>
+                        <div>    <span class="js-keyword">let</span> objectId;</div>
+                        <div>    <span class="js-keyword">try</span> {</div>
+                        <div>      objectId = <span class="js-keyword">new</span> ObjectId(projectId);</div>
+                        <div>    } <span class="js-keyword">catch</span> (error) {</div>
+                        <div>      <span class="js-keyword">return</span> res.status(<span class="js-number">400</span>).json({</div>
+                        <div>        success: <span class="js-boolean">false</span>,</div>
+                        <div>        error: <span class="js-string">'Invalid project ID format'</span></div>
+                        <div>      });</div>
+                        <div>    }</div>
+                        <div></div>
+                        <div>    <span class="js-keyword">const</span> updateData = req.body;</div>
+                        <div>    updateData.updatedAt = <span class="js-keyword">new</span> Date();</div>
+                        <div></div>
+                        <div>    <span class="js-comment">// Use updateOne() with ObjectId filter (Challenge Requirement)</span></div>
+                        <div>    <span class="js-keyword">const</span> result = <span class="js-keyword">await</span> db.collection(<span class="js-string">'projects'</span>).updateOne(</div>
+                        <div>      { _id: objectId },</div>
+                        <div>      { $set: updateData }</div>
+                        <div>    );</div>
+                        <div></div>
+                        <div>    <span class="js-comment">// Check if document was found and updated (Challenge Requirement)</span></div>
+                        <div>    <span class="js-keyword">if</span> (result.matchedCount === <span class="js-number">0</span>) {</div>
+                        <div>      <span class="js-keyword">return</span> res.status(<span class="js-number">404</span>).json({</div>
+                        <div>        success: <span class="js-boolean">false</span>,</div>
+                        <div>        error: <span class="js-string">'Project not found'</span></div>
+                        <div>      });</div>
+                        <div>    }</div>
+                        <div></div>
+                        <div>    <span class="js-comment">// Return updated project data</span></div>
+                        <div>    res.json({</div>
+                        <div>      success: <span class="js-boolean">true</span>,</div>
+                        <div>      message: <span class="js-string">'Project updated successfully'</span>,</div>
+                        <div>      modifiedCount: result.modifiedCount</div>
+                        <div>    });</div>
+                        <div></div>
+                        <div>  } <span class="js-keyword">catch</span> (error) {</div>
+                        <div>    console.error(<span class="js-string">'❌ Update project error:'</span>, error);</div>
+                        <div>    res.status(<span class="js-number">500</span>).json({</div>
+                        <div>      success: <span class="js-boolean">false</span>,</div>
+                        <div>      error: <span class="js-string">'Failed to update project'</span></div>
+                        <div>    });</div>
+                        <div>  }</div>
+                        <div>});</div>
+                    </div>
+
+                    <div class="key-points">
+                        <h4>📝 Update Operation Best Practices:</h4>
+                        <div class="key-point">
+                            <strong>Validate ObjectId:</strong> Convert and validate ID format
+                        </div>
+                        <div class="key-point">
+                            <strong>Check matchedCount:</strong> Verify document exists before updating
+                        </div>
+                        <div class="key-point">
+                            <strong>Use $set operator:</strong> Only update specified fields
+                        </div>
+                        <div class="key-point">
+                            <strong>Update timestamps:</strong> Always update updatedAt field
+                        </div>
+                        <div class="key-point">
+                            <strong>Return status:</strong> Include modification count in response
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Delete Operation (DELETE)",
+                content: `
+                    <h3>Removing Data with DELETE and deleteOne()</h3>
+                    <p>The <span class="highlight">Delete</span> operation removes documents from your MongoDB collection. It uses DELETE requests and the <code>deleteOne()</code> method to permanently remove data.</p>
+
+                    <h3>DELETE Request Flow:</h3>
+
+                    <div class="data-flow">
+                        <h4>🗑️ Delete Operation Flow</h4>
+                        <div class="flow-step">
+                            <strong>Client</strong><br>
+                            <small>DELETE /api/projects/123</small>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="flow-step">
+                            <strong>Express</strong><br>
+                            <small>req.params.id</small>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="flow-step">
+                            <strong>MongoDB</strong><br>
+                            <small>deleteOne()</small>
+                        </div>
+                    </div>
+
+                    <h3>Implementing Delete Operation:</h3>
+
+                    <div class="js-code">
+                        <div><span class="js-comment">// DELETE /api/projects/:id - Delete project (Challenge Requirement)</span></div>
+                        <div>app.delete(<span class="js-string">'/api/projects/:id'</span>, <span class="js-keyword">async</span> (req, res) => {</div>
+                        <div>  <span class="js-keyword">try</span> {</div>
+                        <div>    <span class="js-keyword">const</span> projectId = req.params.id;</div>
+                        <div></div>
+                        <div>    <span class="js-comment">// Convert string ID to ObjectId (Challenge Requirement)</span></div>
+                        <div>    <span class="js-keyword">let</span> objectId;</div>
+                        <div>    <span class="js-keyword">try</span> {</div>
+                        <div>      objectId = <span class="js-keyword">new</span> ObjectId(projectId);</div>
+                        <div>    } <span class="js-keyword">catch</span> (error) {</div>
+                        <div>      <span class="js-keyword">return</span> res.status(<span class="js-number">400</span>).json({</div>
+                        <div>        success: <span class="js-boolean">false</span>,</div>
+                        <div>        error: <span class="js-string">'Invalid project ID format'</span></div>
+                        <div>      });</div>
+                        <div>    }</div>
+                        <div></div>
+                        <div>    <span class="js-comment">// Use deleteOne() with ObjectId filter (Challenge Requirement)</span></div>
+                        <div>    <span class="js-keyword">const</span> result = <span class="js-keyword">await</span> db.collection(<span class="js-string">'projects'</span>).deleteOne({</div>
+                        <div>      _id: objectId</div>
+                        <div>    });</div>
+                        <div></div>
+                        <div>    <span class="js-comment">// Check if document was found and deleted (Challenge Requirement)</span></div>
+                        <div>    <span class="js-keyword">if</span> (result.deletedCount === <span class="js-number">0</span>) {</div>
+                        <div>      <span class="js-keyword">return</span> res.status(<span class="js-number">404</span>).json({</div>
+                        <div>        success: <span class="js-boolean">false</span>,</div>
+                        <div>        error: <span class="js-string">'Project not found'</span></div>
+                        <div>      });</div>
+                        <div>    }</div>
+                        <div></div>
+                        <div>    <span class="js-comment">// Return 204 No Content for successful deletion</span></div>
+                        <div>    res.status(<span class="js-number">204</span>).send();</div>
+                        <div></div>
+                        <div>  } <span class="js-keyword">catch</span> (error) {</div>
+                        <div>    console.error(<span class="js-string">'❌ Delete project error:'</span>, error);</div>
+                        <div>    res.status(<span class="js-number">500</span>).json({</div>
+                        <div>      success: <span class="js-boolean">false</span>,</div>
+                        <div>      error: <span class="js-string">'Failed to delete project'</span></div>
+                        <div>    });</div>
+                        <div>  }</div>
+                        <div>});</div>
+                    </div>
+
+                    <div class="key-points">
+                        <h4>🗑️ Delete Operation Best Practices:</h4>
+                        <div class="key-point">
+                            <strong>Validate ObjectId:</strong> Convert and validate ID format
+                        </div>
+                        <div class="key-point">
+                            <strong>Check deletedCount:</strong> Verify document existed before deletion
+                        </div>
+                        <div class="key-point">
+                            <strong>Use 204 status:</strong> Return 204 No Content for successful deletion
+                        </div>
+                        <div class="key-point">
+                            <strong>Cascade deletes:</strong> Consider related data when deleting
+                        </div>
+                        <div class="key-point">
+                            <strong>Soft deletes:</strong> Consider marking as deleted instead of removing
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "HTTP Status Codes",
+                content: `
+                    <h3>Using Correct HTTP Status Codes (201, 204, 400, 404)</h3>
+                    <p>HTTP status codes communicate the result of your API requests to clients. Using the correct status codes makes your API more professional and easier to understand.</p>
+
+                    <div class="status-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status Code</th>
+                                    <th>Meaning</th>
+                                    <th>When to Use</th>
+                                    <th>Response Body</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="status-2xx">200 OK</span></td>
+                                    <td>Success</td>
+                                    <td>Successful GET, PUT, DELETE</td>
+                                    <td>JSON data</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-2xx">201 Created</span></td>
+                                    <td>Resource Created</td>
+                                    <td>Successful POST (create)</td>
+                                    <td>Created resource data</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-2xx">204 No Content</span></td>
+                                    <td>Success, No Content</td>
+                                    <td>Successful DELETE</td>
+                                    <td>Empty body</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-4xx">400 Bad Request</span></td>
+                                    <td>Client Error</td>
+                                    <td>Invalid request data, bad ID format</td>
+                                    <td>Error message</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-4xx">404 Not Found</span></td>
+                                    <td>Resource Not Found</td>
+                                    <td>Resource doesn't exist</td>
+                                    <td>Error message</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-5xx">500 Internal Error</span></td>
+                                    <td>Server Error</td>
+                                    <td>Database errors, exceptions</td>
+                                    <td>Error message</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Status Code Usage in CRUD:</h3>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h4>✅ Correct Usage</h4>
+                            <ul>
+                                <li><strong>POST:</strong> 201 for successful creation</li>
+                                <li><strong>GET:</strong> 200 for successful retrieval</li>
+                                <li><strong>PUT:</strong> 200 for successful update</li>
+                                <li><strong>DELETE:</strong> 204 for successful deletion</li>
+                                <li><strong>Not Found:</strong> 404 when resource doesn't exist</li>
+                                <li><strong>Bad Request:</strong> 400 for invalid input</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>❌ Common Mistakes</h4>
+                            <ul>
+                                <li>Using 200 for everything</li>
+                                <li>Not handling 404 cases</li>
+                                <li>Returning data with 204</li>
+                                <li>Not validating input (should be 400)</li>
+                                <li>Exposing internal errors (should be 500)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="key-points">
+                        <h4>📊 Status Code Guidelines:</h4>
+                        <div class="key-point">
+                            <strong>Be specific:</strong> Use the most appropriate status code
+                        </div>
+                        <div class="key-point">
+                            <strong>Follow conventions:</strong> Stick to RESTful standards
+                        </div>
+                        <div class="key-point">
+                            <strong>Handle edge cases:</strong> Proper 404 and 400 responses
+                        </div>
+                        <div class="key-point">
+                            <strong>Client expectations:</strong> Clients rely on status codes for behavior
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Complete CRUD API",
+                content: `
+                    <h3>Building a Complete RESTful API</h3>
+                    <p>Now you'll combine all CRUD operations to create a complete RESTful API for managing projects.</p>
+
+                    <h3>API Endpoints Overview:</h3>
+
+                    <div class="api-endpoint">
+                        <div class="endpoint-method">GET</div>
+                        <div class="endpoint-url">/api/projects</div>
+                        <div style="margin-top: 10px;">Retrieve all projects</div>
+                    </div>
+
+                    <div class="api-endpoint">
+                        <div class="endpoint-method">GET</div>
+                        <div class="endpoint-url">/api/projects/:id</div>
+                        <div style="margin-top: 10px;">Retrieve single project by ID</div>
+                    </div>
+
+                    <div class="api-endpoint">
+                        <div class="endpoint-method">POST</div>
+                        <div class="endpoint-url">/api/projects</div>
+                        <div style="margin-top: 10px;">Create new project</div>
+                    </div>
+
+                    <div class="api-endpoint">
+                        <div class="endpoint-method">PUT</div>
+                        <div class="endpoint-url">/api/projects/:id</div>
+                        <div style="margin-top: 10px;">Update existing project</div>
+                    </div>
+
+                    <div class="api-endpoint">
+                        <div class="endpoint-method">DELETE</div>
+                        <div class="endpoint-url">/api/projects/:id</div>
+                        <div style="margin-top: 10px;">Delete project</div>
+                    </div>
+
+                    <h3>Testing Complete CRUD Operations:</h3>
+
+                    <div class="terminal">
+                        <div class="prompt">$</div> <div class="command"># 1. Create a project (POST)</div>
+                        <div class="output">curl -X POST http://localhost:3000/api/projects \</div>
+                        <div class="output">  -H "Content-Type: application/json" \</div>
+                        <div class="output">  -d '{"title":"Test Project","description":"CRUD test"}'</div>
+                        <br>
+                        <div class="prompt">$</div> <div class="command"># 2. Get all projects (GET)</div>
+                        <div class="output">curl http://localhost:3000/api/projects</div>
+                        <br>
+                        <div class="prompt">$</div> <div class="command"># 3. Update the project (PUT)</div>
+                        <div class="output">curl -X PUT http://localhost:3000/api/projects/PROJECT_ID \</div>
+                        <div class="output">  -H "Content-Type: application/json" \</div>
+                        <div class="output">  -d '{"title":"Updated Project","description":"Updated description"}'</div>
+                        <br>
+                        <div class="prompt">$</div> <div class="command"># 4. Delete the project (DELETE)</div>
+                        <div class="output">curl -X DELETE http://localhost:3000/api/projects/PROJECT_ID</div>
+                    </div>
+
+                    <div class="key-points">
+                        <h4>🚀 Complete API Best Practices:</h4>
+                        <div class="key-point">
+                            <strong>Consistent responses:</strong> Same format for all endpoints
+                        </div>
+                        <div class="key-point">
+                            <strong>Proper status codes:</strong> Use appropriate HTTP status codes
+                        </div>
+                        <div class="key-point">
+                            <strong>Input validation:</strong> Validate all inputs before database operations
+                        </div>
+                        <div class="key-point">
+                            <strong>Error handling:</strong> Handle all error cases gracefully
+                        </div>
+                        <div class="key-point">
+                            <strong>Resource identification:</strong> Use consistent ID handling
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "CRUD Challenge",
+                content: `
+                    <div style="text-align: center; margin: 30px 0;">
+                        <h2 style="font-size: 2.5rem; color: #6f42c1;">🗄️ Complete CRUD Challenge</h2>
+                        <p style="font-size: 1.4rem; color: #495057; margin: 20px 0;">
+                            Build the complete CRUD API with Update and Delete operations!
+                        </p>
+                    </div>
+
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h4>📋 Requirements</h4>
+                            <ul>
+                                <li>Build <code>PUT /api/projects/:id</code> endpoint</li>
+                                <li>Use <code>req.params.id</code> to get project ID</li>
+                                <li>Convert ID to <code>ObjectId</code></li>
+                                <li>Use <code>updateOne()</code> with <code>{ _id: objectId }</code> filter</li>
+                                <li>Check <code>result.matchedCount</code> for not found</li>
+                                <li>Build <code>DELETE /api/projects/:id</code> endpoint</li>
+                                <li>Use <code>deleteOne()</code> with ObjectId filter</li>
+                                <li>Check <code>result.deletedCount</code> for not found</li>
+                                <li>Use correct HTTP status codes (204 for delete, 404 for not found)</li>
+                                <li>Test thoroughly with API client</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-item">
+                            <h4>🎯 Expected Behavior</h4>
+                            <div class="json-example">
+                                <div>// PUT /api/projects/VALID_ID</div>
+                                <div>// Request Body:</div>
+                                <div>{</div>
+                                <div>  "<span class="json-key">title</span>": "<span class="json-string">Updated Title</span>"</div>
+                                <div>}</div>
+                                <div><br>// Response:</div>
+                                <div>{</div>
+                                <div>  "<span class="json-key">success</span>": <span class="json-boolean">true</span>,</div>
+                                <div>  "<span class="json-key">message</span>": "<span class="json-string">Project updated successfully</span>",</div>
+                                <div>  "<span class="json-key">modifiedCount</span>": <span class="json-number">1</span></div>
+                                <div>}</div>
+                                <br>
+                                <div>// DELETE /api/projects/VALID_ID</div>
+                                <div>// Response: 204 No Content (empty body)</div>
+                                <br>
+                                <div>// PUT/DELETE /api/projects/INVALID_ID</div>
+                                <div>// Response:</div>
+                                <div>{</div>
+                                <div>  "<span class="json-key">success</span>": <span class="json-boolean">false</span>,</div>
+                                <div>  "<span class="json-key">error</span>": "<span class="json-string">Project not found</span>"</div>
+                                <div>}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Complete Implementation:</h3>
+
+                    <div class="js-code">
+                        <div><span class="js-keyword">const</span> express = <span class="js-function">require</span>(<span class="js-string">'express'</span>);</div>
+                        <div><span class="js-keyword">const</span> { MongoClient, ObjectId } = <span class="js-function">require</span>(<span class="js-string">'mongodb'</span>);</div>
+                        <div><span class="js-keyword">const</span> app = express();</div>
+                        <div><span class="js-keyword">const</span> PORT = <span class="js-keyword">3000</span>;</div>
+                        <div></div>
+                        <div><span class="js-comment">// MongoDB connection</span></div>
+                        <div><span class="js-keyword">const</span> mongoUrl = <span class="js-string">'mongodb://localhost:27017'</span>;</div>
+                        <div><span class="js-keyword">const</span> dbName = <span class="js-string">'resumeData'</span>;</div>
+                        <div><span class="js-keyword">let</span> db;</div>
+                        <div></div>
+                        <div><span class="js-comment">// Middleware</span></div>
+                        <div>app.use(express.json());</div>
+                        <div></div>
+                        <div><span class="js-comment">// PUT /api/projects/:id - Update project (Challenge Requirement)</span></div>
+                        <div>app.put(<span class="js-string">'/api/projects/:id'</span>, <span class="js-keyword">async</span> (req, res) => {</div>
+                        <div>  <span class="js-keyword">try</span> {</div>
+                        <div>    <span class="js-keyword">const</span> projectId = req.params.id;</div>
+                        <div>    <span class="js-keyword">const</span> objectId = <span class="js-keyword">new</span> ObjectId(projectId);</div>
+                        <div></div>
+                        <div>    <span class="js-keyword">const</span> updateData = req.body;</div>
+                        <div>    updateData.updatedAt = <span class="js-keyword">new</span> Date();</div>
+                        <div></div>
+                        <div>    <span class="js-keyword">const</span> result = <span class="js-keyword">await</span> db.collection(<span class="js-string">'projects'</span>).updateOne(</div>
+                        <div>      { _id: objectId },</div>
+                        <div>      { $set: updateData }</div>
+                        <div>    );</div>
+                        <div></div>
+                        <div>    <span class="js-keyword">if</span> (result.matchedCount === <span class="js-number">0</span>) {</div>
+                        <div>      <span class="js-keyword">return</span> res.status(<span class="js-number">404</span>).json({</div>
+                        <div>        success: <span class="js-boolean">false</span>,</div>
+                        <div>        error: <span class="js-string">'Project not found'</span></div>
+                        <div>      });</div>
+                        <div>    }</div>
+                        <div></div>
+                        <div>    res.json({</div>
+                        <div>      success: <span class="js-boolean">true</span>,</div>
+                        <div>      message: <span class="js-string">'Project updated successfully'</span>,</div>
+                        <div>      modifiedCount: result.modifiedCount</div>
+                        <div>    });</div>
+                        <div>  } <span class="js-keyword">catch</span> (error) {</div>
+                        <div>    res.status(<span class="js-number">500</span>).json({</div>
+                        <div>      success: <span class="js-boolean">false</span>,</div>
+                        <div>      error: <span class="js-string">'Failed to update project'</span></div>
+                        <div>    });</div>
+                        <div>  }</div>
+                        <div>});</div>
+                        <div></div>
+                        <div><span class="js-comment">// DELETE /api/projects/:id - Delete project (Challenge Requirement)</span></div>
+                        <div>app.delete(<span class="js-string">'/api/projects/:id'</span>, <span class="js-keyword">async</span> (req, res) => {</div>
+                        <div>  <span class="js-keyword">try</span> {</div>
+                        <div>    <span class="js-keyword">const</span> projectId = req.params.id;</div>
+                        <div>    <span class="js-keyword">const</span> objectId = <span class="js-keyword">new</span> ObjectId(projectId);</div>
+                        <div></div>
+                        <div>    <span class="js-keyword">const</span> result = <span class="js-keyword">await</span> db.collection(<span class="js-string">'projects'</span>).deleteOne({</div>
+                        <div>      _id: objectId</div>
+                        <div>    });</div>
+                        <div></div>
+                        <div>    <span class="js-keyword">if</span> (result.deletedCount === <span class="js-number">0</span>) {</div>
+                        <div>      <span class="js-keyword">return</span> res.status(<span class="js-number">404</span>).json({</div>
+                        <div>        success: <span class="js-boolean">false</span>,</div>
+                        <div>        error: <span class="js-string">'Project not found'</span></div>
+                        <div>      });</div>
+                        <div>    }</div>
+                        <div></div>
+                        <div>    res.status(<span class="js-number">204</span>).send();</div>
+                        <div>  } <span class="js-keyword">catch</span> (error) {</div>
+                        <div>    res.status(<span class="js-number">500</span>).json({</div>
+                        <div>      success: <span class="js-boolean">false</span>,</div>
+                        <div>      error: <span class="js-string">'Failed to delete project'</span></div>
+                        <div>    });</div>
+                        <div>  }</div>
+                        <div>});</div>
+                        <div></div>
+                        <div><span class="js-comment">// Connect to MongoDB and start server</span></div>
+                        <div>MongoClient.connect(mongoUrl).then(client => {</div>
+                        <div>  db = client.db(dbName);</div>
+                        <div>  console.log(<span class="js-string">'✅ Connected to MongoDB'</span>);</div>
+                        <div>  app.listen(PORT, () => {</div>
+                        <div>    console.log(<span class="js-string">\`🚀 Server running on http://localhost:\${PORT}\`</span>);</div>
+                        <div>  });</div>
+                        <div>});</div>
+                    </div>
+
+                    <h3>Testing CRUD Operations:</h3>
+
+                    <div class="terminal">
+                        <div class="prompt">$</div> <div class="command"># Create a project</div>
+                        <div class="output">curl -X POST http://localhost:3000/api/projects \</div>
+                        <div class="output">  -H "Content-Type: application/json" \</div>
+                        <div class="output">  -d '{"title":"Test","description":"Test project"}'</div>
+                        <br>
+                        <div class="prompt">$</div> <div class="command"># Get the project ID from response, then update</div>
+                        <div class="output">curl -X PUT http://localhost:3000/api/projects/PROJECT_ID \</div>
+                        <div class="output">  -H "Content-Type: application/json" \</div>
+                        <div class="output">  -d '{"title":"Updated Test","description":"Updated description"}'</div>
+                        <br>
+                        <div class="prompt">$</div> <div class="command"># Delete the project</div>
+                        <div class="output">curl -X DELETE http://localhost:3000/api/projects/PROJECT_ID</div>
+                        <br>
+                        <div class="prompt">$</div> <div class="command"># Try to update/delete non-existent project (should return 404)</div>
+                        <div class="output">curl -X PUT http://localhost:3000/api/projects/507f1f77bcf86cd799439011 \</div>
+                        <div class="output">  -H "Content-Type: application/json" \</div>
+                        <div class="output">  -d '{"title":"Should fail"}'</div>
+                    </div>
+                `
+            },
+            {
+                title: "Congratulations! 🎉",
+                content: `
+                    <div style="text-align: center; margin: 40px 0;">
+                        <h2 style="font-size: 3rem; color: #6f42c1; margin-bottom: 20px;">🎉 Congratulations! 🎉</h2>
+                        <p style="font-size: 1.6rem; color: #495057; margin-bottom: 30px;">
+                            You've mastered the complete CRUD operations and built a professional database API!
+                        </p>
+                    </div>
+
+                    <div class="key-points">
+                        <h4>🎯 What You've Accomplished:</h4>
+                        <div class="key-point">
+                            <strong>🆔 ObjectId Mastery:</strong> Understanding MongoDB's unique identifier system
+                        </div>
+                        <div class="key-point">
+                            <strong>📝 Update Operations:</strong> PUT requests with updateOne() and proper validation
+                        </div>
+                        <div class="key-point">
+                            <strong>🗑️ Delete Operations:</strong> DELETE requests with deleteOne() and 204 responses
+                        </div>
+                        <div class="key-point">
+                            <strong>📊 HTTP Status Codes:</strong> Using 201, 204, 400, 404 appropriately
+                        </div>
+                        <div class="key-point">
+                            <strong>🔍 Result Validation:</strong> Checking matchedCount and deletedCount
+                        </div>
+                        <div class="key-point">
+                            <strong>⚠️ Error Handling:</strong> Comprehensive error management for all operations
+                        </div>
+                    </div>
+
+                    <h3>🚀 What's Next?</h3>
+                    <ul>
+                        <li><span class="marker-blue">Tomorrow:</span> Advanced MongoDB - Aggregation, Indexing, and Schema Design!</li>
+                        <li><span class="marker-green">Learn:</span> Advanced database concepts and optimization techniques</li>
+                        <li><span class="marker-red">Create:</span> High-performance, scalable database applications</li>
+                        <li><span class="marker-blue">Master:</span> Production-ready database development</li>
+                    </ul>
+
+                    <div style="background: linear-gradient(135deg, #e9ecef, #f8f9fa); padding: 30px; border-radius: 15px; margin: 30px 0; border-left: 4px solid #6f42c1;">
+                        <h4 style="color: #6f42c1; margin-bottom: 15px;">💡 Remember:</h4>
+                        <p style="font-size: 1.2rem; color: #495057; margin: 0;">
+                            You've just completed the full CRUD cycle! Your API now supports creating, reading, updating, and deleting data - the foundation of all data-driven applications. You understand ObjectIds, proper HTTP status codes, and how to handle edge cases professionally.
+                        </p>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 40px;">
+                        <p style="font-size: 1.4rem; color: #6f42c1; font-weight: bold;">
+                            Keep building amazing CRUD APIs, keep managing data professionally, and keep creating data-driven applications! 🌟
+                        </p>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlide = 0;
+
+        function renderSlides() {
+            const container = document.getElementById('slideshow-container');
+            container.innerHTML = '';
+
+            slideContent.forEach((slide, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = `slide ${index === 0 ? 'active' : ''}`;
+
+                slideDiv.innerHTML = `
+                    <div class="slide-content">
+                        <h1 class="slide-title">${slide.title}</h1>
+                        <div>${slide.content}</div>
+                    </div>
+                    <div class="slide-footer">Day 11 | Slide ${index + 1} / ${slideContent.length}</div>
+                `;
+
+                container.appendChild(slideDiv);
+            });
+
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slide-counter');
+
+            slideCounter.textContent = `${currentSlide + 1} / ${slideContent.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slideContent.length - 1;
+        }
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            currentSlide = n;
+            updateNavigation();
+        }
+
+        function nextSlide() {
+            if (currentSlide < slideContent.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        renderSlides();
+    </script>
+</body>
+</html>
+
+</final_file_content>
+
+</final_file_content>
+
+Assistant: Now I need to create the package.json file for Day 11.<write_to_file>
+<path>Day-11/package.json</path>
+<content>{
+  "name": "day-11-crud-complete",
+  "version": "1.0.0",
+  "description": "Day 11: CRUD Operations - Update & Delete with MongoDB and Express.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "crud",
+    "mongodb",
+    "express",
+    "api",
+    "database",
+    "fullstack",
+    "objectid",
+    "http-status"
+  ],
+  "author": "Aldrin Manon",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^6.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aldrinmanon/fullstack-web-development"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "day-12-rest-review",
+  "version": "1.0.0",
+  "description": "Day 12: Rest & Review - Complete REST API Mastery Review and Practice",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "crud",
+    "mongodb",
+    "express",
+    "api",
+    "review",
+    "practice",
+    "assessment"
+  ],
+  "author": "Aldrin Manon",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^6.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aldrinmanon/fullstack-web-development"
+  },
+  "homepage": "https://aldrin.netlify.app"
+}
+<environment_details>
+# VSCode Visible Files
+Day-10/README.md
+
+# VSCode Open Tabs
+Day-11/script.js
+Day-10/README.md
+
+# Current Time
+8/28/2025, 10:05:49 PM (Asia/Calcutta, UTC+5.5:00)
+
+# Context Window Usage
+177,740 / 262.144K tokens used (68%)
+
+# Current Mode
+ACT MODE
+</environment_details>

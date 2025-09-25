@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 14: Blog Platform with User Authentication - Complete Content Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kalam', cursive;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .slide {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            border: 15px solid #212529;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: opacity 0.5s ease-in-out;
+            padding: 30px 50px;
+            line-height: 1.6;
+            color: #343a40;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #e91e63;
+            border-bottom: 3px solid #dee2e6;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .slide-content {
+            font-size: 1.4rem;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .highlight {
+            color: #e91e63;
+            font-weight: 700;
+        }
+
+        .code {
+            background-color: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            color: #000;
+            display: block;
+            white-space: pre-wrap;
+        }
+
+        ul {
+            list-style-type: '📝 ';
+            padding-left: 40px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .slide-footer {
+            text-align: right;
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .marker-blue { color: #0d6efd; }
+        .marker-red { color: #dc3545; }
+        .marker-green { color: #198754; }
+
+        #navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        #navigation button {
+            font-family: 'Kalam', cursive;
+            font-size: 1.5rem;
+            padding: 10px 25px;
+            border: 3px solid #212529;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        #navigation button:hover:not(:disabled) {
+            background-color: #212529;
+            color: #fff;
+        }
+
+        #navigation button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #slide-counter {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        /* Custom styles for Day 14 content */
+        .slide-content h2 {
+            font-size: 2rem;
+            color: #e91e63;
+            margin: 20px 0 15px 0;
+        }
+
+        .slide-content h3 {
+            font-size: 1.6rem;
+            color: #495057;
+            margin: 25px 0 15px 0;
+        }
+
+        .slide-content h4 {
+            font-size: 1.3rem;
+            color: #6c757d;
+            margin: 20px 0 10px 0;
+        }
+
+        .slide-content p {
+            margin-bottom: 15px;
+        }
+
+        .project-overview {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .project-overview h3 {
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h4 {
+            color: #e91e63;
+            margin-bottom: 10px;
+        }
+
+        .feature-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .tech-stack {
+            background: rgba(233, 30, 99, 0.1);
+            border: 2px solid #e91e63;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .tech-stack h4 {
+            color: #e91e63;
+            margin-bottom: 15px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .tech-item .tech-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .auth-integration {
+            background: #f8f9fa;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .auth-integration h4 {
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+
+        .blog-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .blog-icon {
+            font-size: 3rem;
+            animation: bounce 3s ease-in-out infinite;
+        }
+
+        .blog-icon:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .blog-icon:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .code-example .code-line {
+            display: block;
+            margin: 2px 0;
+        }
+
+        .workflow {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .workflow h4 {
+            color: #e91e63;
+            margin-bottom: 15px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #e91e63;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e91e63;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .project-structure {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .project-structure h4 {
+            color: #e91e63;
+            margin-bottom: 15px;
+        }
+
+        .file-tree {
+            font-family: monospace;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .file-tree .folder {
+            color: #e91e63;
+            font-weight: bold;
+        }
+
+        .file-tree .file {
+            color: #495057;
+            margin-left: 20px;
+        }
+
+        .challenges {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .challenges h3 {
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .database-schema {
+            background: #f8f9fa;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .database-schema h4 {
+            color: #ffc107;
+            margin-bottom: 15px;
+        }
+
+        .schema-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Profile Section -->
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.9); padding: 8px 12px; border-radius: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <img src="https://aldrin.netlify.app/IMG_20250305_175533101_PORTRAIT.jpg" alt="Aldrin Manon" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #6f42c1;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: #6f42c1; margin: 0;">Aldrin Manon</h3>
+    </div>
+
+    <div id="slideshow-container"></div>
+
+    <div id="navigation">
+        <button id="prevBtn">← Prev</button>
+        <div id="slide-counter">1 / 12</div>
+        <button id="nextBtn">Next →</button>
+    </div>
+
+    <script>
+        const slideContent = [
+            {
+                title: "Day 14: Blog Platform",
+                content: `
+                    <div style="text-align: center; margin: 40px 0;">
+                        <h2 style="font-size: 3rem; color: #e91e63; margin-bottom: 20px;">📝 Blog Platform with Authentication</h2>
+                        <p style="font-size: 1.6rem; color: #495057; max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                            Build a complete <span class="highlight">content management system</span> with user authentication, combining all previous skills with modern security practices!
+                        </p>
+                    </div>
+
+                    <div class="blog-icons">
+                        <div class="blog-icon">📝</div>
+                        <div class="blog-icon">🔐</div>
+                        <div class="blog-icon">👥</div>
+                    </div>
+
+                    <div class="project-overview">
+                        <h3>🎯 Project Mission</h3>
+                        <p>Create a full-featured blog platform where users can register, login, create posts, and interact with content. This project introduces:</p>
+                        <ul>
+                            <li><strong>User Authentication:</strong> Registration, login, password hashing, sessions</li>
+                            <li><strong>Content Management:</strong> Rich blog posts with categories and tags</li>
+                            <li><strong>User Profiles:</strong> Personalized dashboards and user management</li>
+                            <li><strong>Comments System:</strong> User engagement and interaction</li>
+                            <li><strong>Admin Features:</strong> Content moderation and user management</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "🎨 Project Features",
+                content: `
+                    <h3>Complete Blog Platform Features</h3>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="icon">🔐</div>
+                            <h4>User Authentication</h4>
+                            <p>Secure registration, login, and session management</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">📝</div>
+                            <h4>Rich Blog Posts</h4>
+                            <p>Create and edit blog posts with rich text formatting</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">👤</div>
+                            <h4>User Profiles</h4>
+                            <p>Personal dashboards and profile management</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">💬</div>
+                            <h4>Comments System</h4>
+                            <p>User engagement with post comments</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">🏷️</div>
+                            <h4>Categories & Tags</h4>
+                            <p>Organize content with categories and tags</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">🔍</div>
+                            <h4>Search & Filter</h4>
+                            <p>Advanced search and content filtering</p>
+                        </div>
+                    </div>
+
+                    <div class="challenges">
+                        <h3>🚀 Advanced Authentication Challenges</h3>
+                        <ul>
+                            <li><strong>JWT Tokens:</strong> Stateless authentication with refresh tokens</li>
+                            <li><strong>Password Security:</strong> Bcrypt hashing and password policies</li>
+                            <li><strong>Session Management:</strong> Secure session handling and timeouts</li>
+                            <li><strong>Role-Based Access:</strong> Admin and user permissions</li>
+                            <li><strong>Email Verification:</strong> Account activation and password reset</li>
+                            <li><strong>OAuth Integration:</strong> Social login options</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "🛠️ Technology Stack",
+                content: `
+                    <h3>Authentication-Focused Technology Stack</h3>
+
+                    <div class="tech-stack">
+                        <h4>Authentication & Security</h4>
+                        <div class="tech-grid">
+                            <div class="tech-item">
+                                <div class="tech-icon">🔐</div>
+                                <div>bcrypt</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">🎫</div>
+                                <div>jsonwebtoken</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">🍪</div>
+                                <div>express-session</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">🛡️</div>
+                                <div>helmet</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">🔒</div>
+                                <div>express-validator</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">📧</div>
+                                <div>nodemailer</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tech-stack">
+                        <h4>Frontend Technologies</h4>
+                        <div class="tech-grid">
+                            <div class="tech-item">
+                                <div class="tech-icon">🌐</div>
+                                <div>HTML5</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">🎨</div>
+                                <div>CSS3</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">⚡</div>
+                                <div>JavaScript ES6+</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">📱</div>
+                                <div>Responsive Design</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">🎭</div>
+                                <div>CSS Grid/Flexbox</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-icon">🎯</div>
+                                <div>Form Validation</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="auth-integration">
+                        <h4>🔐 Authentication Integration</h4>
+                        <ul>
+                            <li><strong>Password Hashing:</strong> bcrypt for secure password storage</li>
+                            <li><strong>JWT Authentication:</strong> Stateless token-based auth</li>
+                            <li><strong>Session Management:</strong> Express sessions with Redis</li>
+                            <li><strong>Input Validation:</strong> Server-side validation with express-validator</li>
+                            <li><strong>Rate Limiting:</strong> Prevent brute force attacks</li>
+                            <li><strong>CORS Security:</strong> Cross-origin request protection</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "📋 Project Structure",
+                content: `
+                    <h3>Authentication-Focused Application Architecture</h3>
+
+                    <div class="project-structure">
+                        <h4>📁 Blog Platform Structure</h4>
+                        <div class="file-tree">
+<div class="folder">📂 blog-platform/</div>
+├── <div class="folder">📂 public/</div>
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── dashboard.html
+│   ├── styles.css
+│   └── script.js
+├── <div class="folder">📂 server/</div>
+│   ├── server.js
+│   ├── auth.js
+│   ├── middleware/
+│   ├── routes/
+│   └── models/
+├── <div class="folder">📂 config/</div>
+│   └── database.js
+├── <div class="folder">📂 utils/</div>
+│   └── helpers.js
+├── package.json
+├── .env
+└── README.md
+                        </div>
+                    </div>
+
+                    <h3>Database Schema Design</h3>
+
+                    <div class="database-schema">
+                        <h4>Users Collection</h4>
+                        <div class="schema-code">
+{
+  "_id": ObjectId,
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "$2b$10$encrypted_password_hash",
+  "firstName": "John",
+  "lastName": "Doe",
+  "avatar": "https://...",
+  "role": "user|admin",
+  "isVerified": true,
+  "createdAt": "2025-08-28T...",
+  "lastLogin": "2025-08-28T...",
+  "profile": {
+    "bio": "Software developer...",
+    "website": "https://...",
+    "socialLinks": {...}
+  }
+}
+                        </div>
+                    </div>
+
+                    <div class="database-schema">
+                        <h4>Posts Collection</h4>
+                        <div class="schema-code">
+{
+  "_id": ObjectId,
+  "title": "My First Blog Post",
+  "slug": "my-first-blog-post",
+  "content": "Blog post content...",
+  "excerpt": "Short description...",
+  "author": ObjectId("user_id"),
+  "category": "Technology",
+  "tags": ["javascript", "web-dev"],
+  "status": "draft|published",
+  "featuredImage": "https://...",
+  "views": 1250,
+  "likes": 45,
+  "createdAt": "2025-08-28T...",
+  "updatedAt": "2025-08-28T...",
+  "publishedAt": "2025-08-28T..."
+}
+                        </div>
+                    </div>
+
+                    <div class="database-schema">
+                        <h4>Comments Collection</h4>
+                        <div class="schema-code">
+{
+  "_id": ObjectId,
+  "postId": ObjectId("post_id"),
+  "author": ObjectId("user_id"),
+  "content": "Great article!...",
+  "parentComment": null, // for nested comments
+  "likes": 12,
+  "isApproved": true,
+  "createdAt": "2025-08-28T...",
+  "updatedAt": "2025-08-28T..."
+}
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "🔐 Authentication System",
+                content: `
+                    <h3>Complete Authentication Implementation</h3>
+
+                    <div class="auth-integration">
+                        <h4>🔐 Authentication Flow</h4>
+
+                        <h4>1. User Registration</h4>
+                        <div class="code-example">
+// POST /api/auth/register
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "securepassword123",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+                        </div>
+
+                        <h4>2. Password Hashing</h4>
+                        <div class="code-example">
+<span class="js-keyword">const</span> bcrypt = require('bcryptjs');
+
+<span class="js-comment">// Hash password before storing</span>
+<span class="js-keyword">const</span> saltRounds = 12;
+<span class="js-keyword">const</span> hashedPassword = <span class="js-keyword">await</span> bcrypt.hash(password, saltRounds);
+
+<span class="js-comment">// Verify password during login</span>
+<span class="js-keyword">const</span> isValidPassword = <span class="js-keyword">await</span> bcrypt.compare(plainPassword, hashedPassword);
+                        </div>
+
+                        <h4>3. JWT Token Generation</h4>
+                        <div class="code-example">
+<span class="js-keyword">const</span> jwt = require('jsonwebtoken');
+
+<span class="js-comment">// Generate access token</span>
+<span class="js-keyword">const</span> accessToken = jwt.sign(
+  { userId: user._id, username: user.username },
+  process.env.JWT_SECRET,
+  { expiresIn: '15m' }
+);
+
+<span class="js-comment">// Generate refresh token</span>
+<span class="js-keyword">const</span> refreshToken = jwt.sign(
+  { userId: user._id },
+  process.env.JWT_REFRESH_SECRET,
+  { expiresIn: '7d' }
+);
+                        </div>
+                    </div>
+
+                    <h3>Authentication Middleware</h3>
+
+                    <div class="code-example">
+<span class="js-keyword">// middleware/auth.js</span>
+<span class="js-keyword">const</span> jwt = require('jsonwebtoken');
+
+<span class="js-keyword">const</span> authenticateToken = (req, res, next) => {
+  <span class="js-keyword">const</span> authHeader = req.headers['authorization'];
+  <span class="js-keyword">const</span> token = authHeader && authHeader.split(' ')[1];
+
+  <span class="js-keyword">if</span> (!token) {
+    <span class="js-keyword">return</span> res.status(401).json({ error: 'Access token required' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    <span class="js-keyword">if</span> (err) {
+      <span class="js-keyword">return</span> res.status(403).json({ error: 'Invalid or expired token' });
+    }
+
+    req.user = user;
+    next();
+  });
+};
+
+<span class="js-keyword">const</span> requireRole = (role) => {
+  <span class="js-keyword">return</span> (req, res, next) => {
+    <span class="js-keyword">if</span> (req.user.role !== role) {
+      <span class="js-keyword">return</span> res.status(403).json({ error: 'Insufficient permissions' });
+    }
+    next();
+  };
+};
+
+module.exports = { authenticateToken, requireRole };
+                    </div>
+                `
+            },
+            {
+                title: "🔄 Development Workflow",
+                content: `
+                    <h3>Authentication-Focused Development Process</h3>
+
+                    <div class="workflow">
+                        <h4>🚀 Day 14 Development Timeline</h4>
+
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Authentication Setup (2 hours)</strong><br>
+                                <small>Implement user registration, login, JWT tokens, and middleware</small>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>Frontend Authentication (1.5 hours)</strong><br>
+                                <small>Create login/register forms with validation and session management</small>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Blog Post CRUD (2 hours)</strong><br>
+                                <small>Implement create, read, update, delete operations for blog posts</small>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <strong>Comments System (1.5 hours)</strong><br>
+                                <small>Add comment functionality with user association</small>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">5</div>
+                            <div>
+                                <strong>Dashboard & Profile (1 hour)</strong><br>
+                                <small>Create user dashboard and profile management</small>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">6</div>
+                            <div>
+                                <strong>Security & Testing (1 hour)</strong><br>
+                                <small>Add security measures and comprehensive testing</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-overview">
+                        <h3>⏰ Time Distribution</h3>
+                        <ul>
+                            <li><strong>Authentication Setup:</strong> 2 hours (20%)</li>
+                            <li><strong>Frontend Authentication:</strong> 1.5 hours (15%)</li>
+                            <li><strong>Blog Post CRUD:</strong> 2 hours (20%)</li>
+                            <li><strong>Comments System:</strong> 1.5 hours (15%)</li>
+                            <li><strong>Dashboard & Profile:</strong> 1 hour (10%)</li>
+                            <li><strong>Security & Testing:</strong> 2 hours (20%)</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "🎨 Frontend Design",
+                content: `
+                    <h3>Beautiful Blog Platform UI</h3>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="icon">📱</div>
+                            <h4>Responsive Layout</h4>
+                            <p>Mobile-first design with fluid typography</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">🎨</div>
+                            <h4>Modern UI</h4>
+                            <p>Clean design with smooth animations</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">📝</div>
+                            <h4>Rich Text Editor</h4>
+                            <p>WYSIWYG editor for blog post creation</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">🎯</div>
+                            <h4>Form Validation</h4>
+                            <p>Client-side validation with feedback</p>
+                        </div>
+                    </div>
+
+                    <h3>Authentication Forms</h3>
+
+                    <div class="code-example">
+<span class="js-keyword">// Login Form with Validation</span>
+<span class="js-keyword">function</span> createLoginForm() {
+  <span class="js-keyword">return</span> \`
+    <form id="login-form" class="auth-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+        <div class="error-message" id="email-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required>
+        <div class="error-message" id="password-error"></div>
+      </div>
+
+      <button type="submit" class="btn-primary">Login</button>
+      <a href="#" onclick="showRegisterForm()">Create Account</a>
+    </form>
+  \`;
+}
+
+<span class="js-keyword">// Blog Post Card Component</span>
+<span class="js-keyword">function</span> createBlogPostCard(post) {
+  <span class="js-keyword">return</span> \`
+    <article class="blog-post-card">
+      <img src="\${post.featuredImage}" alt="\${post.title}" class="post-image">
+      <div class="post-content">
+        <h2>\${post.title}</h2>
+        <p class="post-excerpt">\${post.excerpt}</p>
+        <div class="post-meta">
+          <span>By \${post.author}</span>
+          <span>\${new Date(post.createdAt).toLocaleDateString()}</span>
+        </div>
+        <a href="/post/\${post.slug}" class="read-more">Read More</a>
+      </div>
+    </article>
+  \`;
+}
+                    </div>
+
+                    <div class="project-overview">
+                        <h3>🎨 Design Features</h3>
+                        <ul>
+                            <li><strong>Authentication Pages:</strong> Clean login/register forms</li>
+                            <li><strong>Dashboard Layout:</strong> User-friendly admin interface</li>
+                            <li><strong>Blog Post Cards:</strong> Attractive content previews</li>
+                            <li><strong>Responsive Grid:</strong> Adaptive layouts for all devices</li>
+                            <li><strong>Interactive Elements:</strong> Hover effects and transitions</li>
+                            <li><strong>Typography:</strong> Readable fonts and proper hierarchy</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "⚡ Advanced Features",
+                content: `
+                    <h3>Production-Ready Blog Features</h3>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="icon">🔄</div>
+                            <h4>JWT Refresh</h4>
+                            <p>Automatic token refresh for seamless sessions</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">📧</div>
+                            <h4>Email Verification</h4>
+                            <p>Account activation and password reset</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">🛡️</div>
+                            <h4>Rate Limiting</h4>
+                            <p>Protection against brute force attacks</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">📊</div>
+                            <h4>Analytics</h4>
+                            <p>Post views, user engagement tracking</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">🔍</div>
+                            <h4>Advanced Search</h4>
+                            <p>Full-text search with filters</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="icon">🌐</div>
+                            <h4>SEO Friendly</h4>
+                            <p>Meta tags, sitemaps, and structured data</p>
+                        </div>
+                    </div>
+
+                    <h3>Blog Platform API Endpoints</h3>
+
+                    <div class="auth-integration">
+                        <h4>Authentication Endpoints</h4>
+
+                        <div class="code-example">
+<span class="js-comment">// User Authentication</span>
+POST /api/auth/register        <span class="js-comment">// User registration</span>
+POST /api/auth/login           <span class="js-comment">// User login</span>
+POST /api/auth/logout          <span class="js-comment">// User logout</span>
+POST /api/auth/refresh         <span class="js-comment">// Refresh access token</span>
+GET  /api/auth/me             <span class="js-comment">// Get current user</span>
+
+<span class="js-comment">// Blog Posts Management</span>
+GET  /api/posts               <span class="js-comment">// Get all posts</span>
+POST /api/posts               <span class="js-comment">// Create new post</span>
+GET  /api/posts/:id           <span class="js-comment">// Get specific post</span>
+PUT  /api/posts/:id           <span class="js-comment">// Update post</span>
+DELETE /api/posts/:id         <span class="js-comment">// Delete post</span>
+
+<span class="js-comment">// Comments System</span>
+GET  /api/posts/:id/comments  <span class="js-comment">// Get post comments</span>
+POST /api/posts/:id/comments  <span class="js-comment">// Add comment</span>
+DELETE /api/comments/:id      <span class="js-comment">// Delete comment</span>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "🚀 Deployment & Security",
+                content: `
+                    <h3>Production Security & Deployment</h3>
+
+                    <div class="workflow">
+                        <h4>🔐 Security Implementation</h4>
+
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Password Security</strong><br>
+                                <small>bcrypt hashing, password policies, salt rounds</small>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>JWT Security</strong><br>
+                                <small>Secure token generation, expiration, refresh tokens</small>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Input Validation</strong><br>
+                                <small>Server-side validation, sanitization, SQL injection prevention</small>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <strong>Rate Limiting</strong><br>
+                                <small>Brute force protection, API throttling</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Environment Configuration</h3>
+
+                    <div class="code-example">
+<span class="js-comment">// .env file for production</span>
+NODE_ENV=production
+PORT=3000
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/blog_prod
+
+<span class="js-comment">// JWT Configuration</span>
+JWT_SECRET=your_super_secure_jwt_secret_key_here
+JWT_REFRESH_SECRET=your_refresh_token_secret_key_here
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+
+<span class="js-comment">// Security Settings</span>
+BCRYPT_ROUNDS=12
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+<span class="js-comment">// Email Configuration (for future features)</span>
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
+                        </div>
+
+                    <h3>Security Best Practices</h3>
+
+                    <div class="project-overview">
+                        <h3>🛡️ Security Features</h3>
+                        <ul>
+                            <li><strong>Password Hashing:</strong> bcrypt with 12 salt rounds</li>
+                            <li><strong>JWT Tokens:</strong> Secure token-based authentication</li>
+                            <li><strong>Input Sanitization:</strong> Prevent XSS and injection attacks</li>
+                            <li><strong>Rate Limiting:</strong> Protect against brute force attacks</li>
+                            <li><strong>CORS Protection:</strong> Secure cross-origin requests</li>
+                            <li><strong>Helmet Security:</strong> Security headers and protection</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "🎯 Success Metrics",
+                content: `
+                    <h3>Measuring Authentication Success</h3>
+
+                    <div class="achievement">
+                        <h4>✅ Technical Achievements</h4>
+                        <ul>
+                            <li><strong>User Authentication System</strong> - Complete registration and login flow</li>
+                            <li><strong>JWT Implementation</strong> - Secure token-based authentication</li>
+                            <li><strong>Password Security</strong> - bcrypt hashing and validation</li>
+                            <li><strong>Session Management</strong> - Secure user sessions and logout</li>
+                            <li><strong>Role-Based Access</strong> - User and admin permissions</li>
+                            <li><strong>Content Management</strong> - Full CRUD for blog posts</li>
+                        </ul>
+                    </div>
+
+                    <div class="achievement">
+                        <h4>🚀 Skills Demonstrated</h4>
+                        <ul>
+                            <li><strong>Security Implementation</strong> - Authentication and authorization</li>
+                            <li><strong>User Management</strong> - Registration, profiles, permissions</li>
+                            <li><strong>Content Systems</strong> - Blog posts, comments, categories</li>
+                            <li><strong>Data Relationships</strong> - Users, posts, comments connections</li>
+                            <li><strong>Frontend State</strong> - Authentication state management</li>
+                            <li><strong>API Security</strong> - Protected endpoints and middleware</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-overview">
+                        <h3>📊 Project Impact</h3>
+                        <p>By completing this blog platform, you will have:</p>
+                        <ul>
+                            <li><strong>Authentication Expertise</strong> - Industry-standard user management</li>
+                            <li><strong>Content Management Skills</strong> - Complete CMS functionality</li>
+                            <li><strong>Security Best Practices</strong> - Production-ready security implementation</li>
+                            <li><strong>User Experience Design</strong> - Intuitive authentication flows</li>
+                            <li><strong>Scalable Architecture</strong> - Extensible platform design</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "📋 Implementation Guide",
+                content: `
+                    <h3>Complete Blog Platform Implementation</h3>
+
+                    <div class="checkpoint">
+                        <h4>✅ Phase 1: Authentication Foundation</h4>
+                        <div class="checklist">
+                            <div class="item">Set up user registration and login system</div>
+                            <div class="item">Implement bcrypt password hashing</div>
+                            <div class="item">Create JWT token generation and validation</div>
+                            <div class="item">Build authentication middleware</div>
+                            <div class="item">Set up user session management</div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <h4>✅ Phase 2: Frontend Authentication</h4>
+                        <div class="checklist">
+                            <div class="item">Create responsive login/register forms</div>
+                            <div class="item">Implement client-side form validation</div>
+                            <div class="item">Add authentication state management</div>
+                            <div class="item">Create protected route handling</div>
+                            <div class="item">Build user dashboard interface</div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <h4>✅ Phase 3: Blog Content Management</h4>
+                        <div class="checklist">
+                            <div class="item">Implement blog post CRUD operations</div>
+                            <div class="item">Create rich text editor interface</div>
+                            <div class="item">Add categories and tags system</div>
+                            <div class="item">Build post listing and detail views</div>
+                            <div class="item">Implement search and filtering</div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <h4>✅ Phase 4: Comments & Interaction</h4>
+                        <div class="checklist">
+                            <div class="item">Create comments system with user association</div>
+                            <div class="item">Add nested comments functionality</div>
+                            <div class="item">Implement comment moderation</div>
+                            <div class="item">Add like/vote system for posts</div>
+                            <div class="item">Create user engagement analytics</div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <h4>✅ Phase 5: Advanced Features</h4>
+                        <div class="checklist">
+                            <div class="item">Implement user role management (admin/user)</div>
+                            <div class="item">Add email verification system</div>
+                            <div class="item">Create password reset functionality</div>
+                            <div class="item">Implement rate limiting and security measures</div>
+                            <div class="item">Add SEO optimization and meta tags</div>
+                        </div>
+                    </div>
+
+                    <div class="checkpoint">
+                        <h4>✅ Phase 6: Testing & Deployment</h4>
+                        <div class="checklist">
+                            <div class="item">Write comprehensive unit tests</div>
+                            <div class="item">Perform integration testing</div>
+                            <div class="item">Test authentication flows</div>
+                            <div class="item">Security testing and vulnerability assessment</div>
+                            <div class="item">Deploy to production environment</div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "🎉 Project Completion",
+                content: `
+                    <div style="text-align: center; margin: 40px 0;">
+                        <h2 style="font-size: 3rem; color: #e91e63; margin-bottom: 20px;">🎉 Blog Platform Complete!</h2>
+                        <p style="font-size: 1.6rem; color: #495057; max-width 800px; margin: 0 auto; line-height: 1.8;">
+                            Congratulations! You've successfully built a complete blog platform with user authentication, combining all skills from Days 1-14!
+                        </p>
+                    </div>
+
+                    <div class="achievement">
+                        <h4>🏆 What You've Built</h4>
+                        <ul>
+                            <li><strong>🔐 Complete Authentication System</strong> - Secure user registration and login</li>
+                            <li><strong>📝 Full Content Management</strong> - Blog posts with rich text editing</li>
+                            <li><strong>👥 User Management System</strong> - Profiles, roles, and permissions</li>
+                            <li><strong>💬 Interactive Comments</strong> - User engagement and discussion</li>
+                            <li><strong>🛡️ Production Security</strong> - Industry-standard security practices</li>
+                            <li><strong>📊 Admin Dashboard</strong> - Content and user management interface</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-overview">
+                        <h3>🚀 Next Steps</h3>
+                        <p>Your blog platform is ready for:</p>
+                        <ul>
+                            <li><strong>User Growth:</strong> Add social features and notifications</li>
+                            <li><strong>Content Expansion:</strong> Multiple content types (videos, images)</li>
+                            <li><strong>Analytics:</strong> User engagement and content performance</li>
+                            <li><strong>Monetization:</strong> Premium features and subscriptions</li>
+                            <li><strong>Mobile App:</strong> React Native companion app</li>
+                            <li><strong>Multi-tenancy:</strong> Support for multiple blogs</li>
+                        </ul>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 40px;">
+                        <p style="font-size: 1.4rem; color: #e91e63; font-weight: bold;">
+                            🎯 Day 14 Complete: Blog Platform with Authentication! Ready for Day 15: Task Management 🚀
+                        </p>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlide = 0;
+
+        function renderSlides() {
+            const container = document.getElementById('slideshow-container');
+            container.innerHTML = '';
+
+            slideContent.forEach((slide, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = `slide ${index === 0 ? 'active' : ''}`;
+
+                slideDiv.innerHTML = `
+                    <div class="slide-content">
+                        <h1 class="slide-title">${slide.title}</h1>
+                        <div>${slide.content}</div>
+                    </div>
+                    <div class="slide-footer">Day 14 | Slide ${index + 1} / ${slideContent.length}</div>
+                `;
+
+                container.appendChild(slideDiv);
+            });
+
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slide-counter');
+
+            slideCounter.textContent = `${currentSlide + 1} / ${slideContent.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slideContent.length - 1;
+        }
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            currentSlide = n;
+            updateNavigation();
+        }
+
+        function nextSlide() {
+            if (currentSlide < slideContent.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        renderSlides();
+    </script>
+</body>
+</html>

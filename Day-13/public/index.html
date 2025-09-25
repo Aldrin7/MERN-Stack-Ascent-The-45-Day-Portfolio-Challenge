@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 13: Work Experience API - Practical Implementation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💼</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>💼 Work Experience API</h1>
+            <p class="subtitle">Day 13: MERN Stack Ascent - Complete CRUD Implementation</p>
+            <div class="status-indicator">
+                <span class="status-dot" id="serverStatus"></span>
+                <span class="status-text" id="serverText">Server Status</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- API Endpoints Overview -->
+            <section class="section">
+                <h2>🚀 API Endpoints</h2>
+                <div class="endpoints-grid">
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/work-experience</div>
+                        <div class="endpoint-desc">Get all work experiences</div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-method post">POST</div>
+                        <div class="endpoint-path">/api/work-experience</div>
+                        <div class="endpoint-desc">Create new work experience</div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-method get">GET</div>
+                        <div class="endpoint-path">/api/work-experience/:id</div>
+                        <div class="endpoint-desc">Get single work experience</div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-method put">PUT</div>
+                        <div class="endpoint-path">/api/work-experience/:id</div>
+                        <div class="endpoint-desc">Update work experience</div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-method delete">DELETE</div>
+                        <div class="endpoint-path">/api/work-experience/:id</div>
+                        <div class="endpoint-desc">Delete work experience</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Form Section -->
+            <section class="section">
+                <h2>📝 Create Work Experience</h2>
+                <form id="workExperienceForm" class="form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="company">Company Name *</label>
+                            <input type="text" id="company" name="company" required placeholder="Tech Innovations Inc.">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="position">Position *</label>
+                            <input type="text" id="position" name="position" required placeholder="Senior Full Stack Developer">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="startDate">Start Date *</label>
+                            <input type="date" id="startDate" name="startDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="date" id="endDate" name="endDate">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" rows="3" placeholder="Describe your role and responsibilities..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="technologies">Technologies</label>
+                            <input type="text" id="technologies" name="technologies" placeholder="React, Node.js, MongoDB">
+                            <small>Comma-separated values</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="achievements">Achievements</label>
+                            <input type="text" id="achievements" name="achievements" placeholder="Led team of 5 developers">
+                            <small>Comma-separated values</small>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="current" name="current">
+                                <span class="checkmark"></span>
+                                Currently working here
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-icon">💾</span>
+                            Create Work Experience
+                        </button>
+                        <button type="button" onclick="clearForm()" class="btn btn-secondary">
+                            <span class="btn-icon">🗑️</span>
+                            Clear Form
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Work Experience List -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>📋 Work Experience List</h2>
+                    <div class="filters">
+                        <select id="filterCurrent" onchange="filterExperiences()">
+                            <option value="">All Positions</option>
+                            <option value="true">Current Only</option>
+                            <option value="false">Past Only</option>
+                        </select>
+                        <input type="text" id="searchCompany" placeholder="Search by company..." onkeyup="searchExperiences()">
+                    </div>
+                </div>
+
+                <div id="experiencesList" class="experiences-list">
+                    <!-- Experiences will be loaded here -->
+                </div>
+
+                <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Loading experiences...</p>
+                </div>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3>No work experiences found</h3>
+                    <p>Create your first work experience using the form above.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Modals -->
+        <!-- Edit Modal -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Edit Work Experience</h3>
+                    <button onclick="closeModal('editModal')" class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm" class="form">
+                        <input type="hidden" id="editId" name="id">
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="editCompany">Company Name *</label>
+                                <input type="text" id="editCompany" name="company" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editPosition">Position *</label>
+                                <input type="text" id="editPosition" name="position" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editStartDate">Start Date *</label>
+                                <input type="date" id="editStartDate" name="startDate" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editEndDate">End Date</label>
+                                <input type="date" id="editEndDate" name="endDate">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="editDescription">Description</label>
+                                <textarea id="editDescription" name="description" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editTechnologies">Technologies</label>
+                                <input type="text" id="editTechnologies" name="technologies">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="editAchievements">Achievements</label>
+                                <input type="text" id="editAchievements" name="achievements">
+                            </div>
+
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="editCurrent" name="current">
+                                    <span class="checkmark"></span>
+                                    Currently working here
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Update Experience</button>
+                            <button type="button" onclick="closeModal('editModal')" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirm Deletion</h3>
+                    <button onclick="closeModal('deleteModal')" class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="delete-confirmation">
+                        <div class="warning-icon">⚠️</div>
+                        <h4>Are you sure you want to delete this work experience?</h4>
+                        <p>This action cannot be undone.</p>
+                        <div id="deleteItemInfo" class="delete-info"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button onclick="confirmDelete()" class="btn btn-danger">Yes, Delete</button>
+                        <button onclick="closeModal('deleteModal')" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div id="notifications" class="notifications-container"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

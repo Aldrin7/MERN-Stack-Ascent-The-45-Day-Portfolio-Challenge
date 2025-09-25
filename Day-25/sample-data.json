@@ -1,0 +1,170 @@
+[
+  {
+    "id": 1,
+    "company": "Google",
+    "position": "Senior Frontend Developer",
+    "startDate": "2022-03-15",
+    "endDate": "2024-08-31",
+    "location": "Mountain View, CA",
+    "isCurrent": false,
+    "description": "Led development of modern React applications serving millions of users. Mentored junior developers and established best practices for the team.",
+    "achievements": [
+      "Improved performance by 40% through code optimization and lazy loading",
+      "Mentored 5 junior developers who were promoted within 6 months",
+      "Led migration from legacy React 16 to React 18 with zero downtime"
+    ],
+    "technologies": ["React", "TypeScript", "Node.js", "GraphQL", "AWS", "Docker"],
+    "companySize": "100,000+",
+    "industry": "Technology",
+    "website": "https://google.com",
+    "createdAt": "2024-09-01T00:00:00.000Z",
+    "updatedAt": "2024-09-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "company": "Microsoft",
+    "position": "Software Engineer",
+    "startDate": "2020-06-01",
+    "endDate": null,
+    "location": "Seattle, WA",
+    "isCurrent": true,
+    "description": "Working on Azure cloud services team, focusing on React-based admin dashboards and API integrations. Part of the team that handles millions of daily requests.",
+    "achievements": [
+      "Developed new dashboard UI serving 2M+ daily active users",
+      "Reduced API response time by 30% through optimization",
+      "Implemented automated testing that increased code coverage to 95%"
+    ],
+    "technologies": ["React", "Azure DevOps", "TypeScript", "PostgreSQL", ".NET Core"],
+    "companySize": "150,000+",
+    "industry": "Technology",
+    "website": "https://microsoft.com",
+    "createdAt": "2024-09-01T00:00:00.000Z",
+    "updatedAt": "2024-09-01T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "company": "Amazon Web Services",
+    "position": "Full Stack Developer",
+    "startDate": "2018-09-01",
+    "endDate": "2019-12-15",
+    "location": "Arlington, VA",
+    "isCurrent": false,
+    "description": "Part of the EC2 service team building internal management tools and monitoring dashboards. Worked closely with DevOps teams to improve deployment processes.",
+    "achievements": [
+      "Built monitoring dashboard that reduced incident response time by 50%",
+      "Automated deployment pipeline reducing deployment errors by 80%",
+      "Presented at internal tech conference about React best practices"
+    ],
+    "technologies": ["React", "Python", "Flask", "AWS", "DynamoDB", "Kubernetes"],
+    "companySize": "1,500,000+",
+    "industry": "Cloud Computing",
+    "website": "https://aws.amazon.com",
+    "createdAt": "2024-09-01T00:00:00.000Z",
+    "updatedAt": "2024-09-01T00:00:00.000Z"
+  },
+  {
+    "id": 4,
+    "company": "Netflix",
+    "position": "Frontend Engineer",
+    "startDate": "2017-02-01",
+    "endDate": "2018-05-30",
+    "location": "Los Gatos, CA",
+    "isCurrent": false,
+    "description": "Joined the streaming UI team working on user experience improvements and new feature development for the global platform serving 120M+ subscribers.",
+    "achievements": [
+      "Implemented offline viewing feature that increased user retention",
+      "Optimized video player component reducing crashes by 25%",
+      "Collaborated with UX designers to improve accessibility compliance"
+    ],
+    "technologies": ["React", "JavaScript", "SCSS", "Jest", "Enzyme", "A/B Testing"],
+    "companySize": "10,000+",
+    "industry": "Entertainment",
+    "website": "https://netflix.com",
+    "createdAt": "2024-09-01T00:00:00.000Z",
+    "updatedAt": "2024-09-01T00:00:00.000Z"
+  },
+  {
+    "id": 5,
+    "company": "Airbnb",
+    "position": "Product Engineer",
+    "startDate": "2016-07-15",
+    "endDate": "2016-11-30",
+    "location": "San Francisco, CA",
+    "isCurrent": false,
+    "description": "Contract position working on the host experience team. Redesigned booking management interface and improved data visualization for hosts.",
+    "achievements": [
+      "Redesigned booking dashboard that increased host satisfaction by 25%",
+      "Built data visualization tools that improved insight accuracy by 35%",
+      "Mentored interns on React component architecture"
+    ],
+    "technologies": ["React", "Redux", "Sass", "D3.js", "Node.js", "MongoDB"],
+    "companySize": "5,000+",
+    "industry": "Travel & Tourism",
+    "website": "https://airbnb.com",
+    "createdAt": "2024-09-01T00:00:00.000Z",
+    "updatedAt": "2024-09-01T00:00:00.000Z"
+  },
+  {
+    "id": 6,
+    "company": "StartupXYZ",
+    "position": "Lead Developer",
+    "startDate": "2015-03-01",
+    "endDate": "2016-01-15",
+    "location": "Austin, TX",
+    "isCurrent": false,
+    "description": "Early employee at a fintech startup that was acquired. Built the entire frontend from scratch and established development processes.",
+    "achievements": [
+      "Built complete React application from scratch (50k+ lines of code)",
+      "Established CI/CD pipeline and testing infrastructure",
+      "Led successful product launch with zero downtime in first 6 months"
+    ],
+    "technologies": ["React", "JavaScript", "Webpack", "Jest", "PostgreSQL", "Stripe API"],
+    "companySize": "50-100",
+    "industry": "Fintech",
+    "website": "https://startupxyz.com",
+    "createdAt": "2024-09-01T00:00:00.000Z",
+    "updatedAt": "2024-09-01T00:00:00.000Z"
+  },
+  {
+    "id": 7,
+    "company": "Freelance Development",
+    "position": "Web Developer",
+    "startDate": "2014-06-01",
+    "endDate": "2015-02-28",
+    "location": "Remote",
+    "isCurrent": false,
+    "description": "Independent contractor building websites and web applications for various clients. Specialized in frontend development and UI/UX implementation.",
+    "achievements": [
+      "Delivered 15+ client projects with 100% satisfaction rate",
+      "Mentored 3 junior developers from different countries",
+      "Built reusable component library used across multiple projects"
+    ],
+    "technologies": ["HTML", "CSS", "JavaScript", "jQuery", "WordPress", "PHP"],
+    "companySize": "Self-employed",
+    "industry": "Freelance",
+    "website": null,
+    "createdAt": "2024-09-01T00:00:00.000Z",
+    "updatedAt": "2024-09-01T00:00:00.000Z"
+  },
+  {
+    "id": 8,
+    "company": "University of Tech",
+    "position": "Computer Science Student",
+    "startDate": "2013-09-01",
+    "endDate": "2017-05-31",
+    "location": "Multiple Campuses",
+    "isCurrent": false,
+    "description": "Bachelor's degree in Computer Science with focus on web technologies and software engineering practices.",
+    "achievements": [
+      "Graduated Magna Cum Laude with 3.8 GPA",
+      "President of Computer Science Club (2015-2016)",
+      "Won 'Best Capstone Project' for group collaboration tool"
+    ],
+    "technologies": ["Java", "C++", "JavaScript", "HTML/CSS", "SQL", "Git"],
+    "companySize": "10,000+ students",
+    "industry": "Education",
+    "website": "https://university-tech.edu",
+    "createdAt": "2024-09-01T00:00:00.000Z",
+    "updatedAt": "2024-09-01T00:00:00.000Z"
+  }
+]

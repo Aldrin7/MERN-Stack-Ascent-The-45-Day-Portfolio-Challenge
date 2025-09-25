@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Header Challenge - Day 19</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-content h2 {
+            font-size: 1.5rem;
+            color: #666;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        .react-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #61dafb, #21a3c4);
+            color: #282c34;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(97, 218, 251, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .react-badge::before {
+            content: '⚛️';
+            font-size: 1.1rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(97, 218, 251, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(97, 218, 251, 0.4);
+            }
+        }
+
+        .challenge-info {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .challenge-info h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .challenge-info p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .instructions h4 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .instructions ol {
+            padding-left: 1.5rem;
+        }
+
+        .instructions li {
+            margin: 0.5rem 0;
+            color: #555;
+        }
+
+        .code-preview {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            text-align: left;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .footer {
+            margin-top: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #61dafb;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .header-content h2 {
+                font-size: 1.3rem;
+            }
+
+            .header-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .tech-stack {
+                gap: 0.5rem;
+            }
+
+            .tech-item {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #61dafb;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- React App Root -->
+        <div id="root">
+            <div style="text-align: center; padding: 2rem;">
+                <div class="loading"></div>
+                <p style="color: white; margin-top: 1rem;">Loading React Component...</p>
+            </div>
+        </div>
+
+        <!-- Challenge Information -->
+        <div class="challenge-info">
+            <h3>🎯 Day 19 Challenge: React Header Component</h3>
+            <p>
+                Congratulations! You've successfully created your first React component using JSX syntax.
+                Above is your <strong>Header</strong> component rendered using <code>ReactDOM.render()</code>.
+            </p>
+
+            <div class="tech-stack">
+                <span class="tech-item">React 17</span>
+                <span class="tech-item">JSX</span>
+                <span class="tech-item">ReactDOM</span>
+                <span class="tech-item">Babel</span>
+                <span class="tech-item">CDN Setup</span>
+            </div>
+
+            <div class="instructions">
+                <h4>📋 What You Accomplished:</h4>
+                <ol>
+                    <li>✅ Set up React in a single HTML file using CDN links</li>
+                    <li>✅ Created a functional <code>Header</code> component</li>
+                    <li>✅ Used JSX syntax to write HTML-like markup in JavaScript</li>
+                    <li>✅ Rendered the component using <code>ReactDOM.render()</code></li>
+                    <li>✅ Applied modern CSS styling with gradients and animations</li>
+                    <li>✅ Demonstrated component-based architecture principles</li>
+                </ol>
+            </div>
+
+            <div class="code-preview">
+                <pre><code>function Header() {
+    return (
+        <div className="header-content">
+            <h1>Your Name</h1>
+            <h2>Your Professional Title</h2>
+            <div className="react-badge">
+                Built with React ⚛️
+            </div>
+        </div>
+    );
+}
+
+// Rendering the Component
+ReactDOM.render(<Header />, document.getElementById('root'));
+</code></pre>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            🎉 <strong>Challenge Completed Successfully!</strong><br>
+            You've mastered the fundamentals of React components, JSX, and ReactDOM rendering.
+        </div>
+
+        <div class="footer">
+            <p>
+                <strong>Day 19: Welcome to React</strong> •
+                <a href="Day-19-slides.html" target="_blank">View Slides</a> •
+                <a href="README.md" target="_blank">Read Documentation</a>
+            </p>
+            <p>Built with ❤️ using React • 45-Day Full Stack Challenge</p>
+        </div>
+    </div>
+
+    <!-- React CDN Scripts -->
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- React Component -->
+    <script type="text/babel">
+        // Header Component Definition
+        function Header() {
+            return (
+                <div className="header-card">
+                    <div className="header-content">
+                        <h1>Aldrin Manon</h1>
+                        <h2>Full Stack Developer</h2>
+                        <div className="react-badge">
+                            Built with React
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+    // Render the Header component to the DOM
+    ReactDOM.render(<Header />, document.getElementById('root'));
+
+        // Show success message after component renders
+        setTimeout(() => {
+            const successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                successMessage.classList.add('show');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
